@@ -3,544 +3,146 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CMS – HS Performance Projecten</title>
+  <title>CMS – HS Performance</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --red: #e8191b;
-      --red-dark: #b51214;
-      --green: #1db954;
-      --black: #0a0a0a;
-      --dark: #111111;
-      --dark2: #1a1a1a;
-      --dark3: #222222;
-      --border: #2a2a2a;
-      --border2: #333;
-      --text: #e8e8e8;
-      --muted: #888;
-      --white: #ffffff;
+      --red: #e8191b; --red-dark: #b51214; --green: #1db954;
+      --black: #0a0a0a; --dark: #111; --dark2: #1a1a1a; --dark3: #222;
+      --border: #2a2a2a; --border2: #333; --text: #e8e8e8; --muted: #888; --white: #fff;
     }
-
     html { scroll-behavior: smooth; }
-    body {
-      font-family: 'Barlow', sans-serif;
-      background: var(--black);
-      color: var(--text);
-      min-height: 100vh;
-    }
+    body { font-family: 'Barlow', sans-serif; background: var(--black); color: var(--text); min-height: 100vh; }
 
-    /* ── LOGIN ── */
-    .login-wrap {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-      background: radial-gradient(ellipse at center, #1a0000 0%, var(--black) 70%);
-    }
-    .login-box {
-      background: var(--dark2);
-      border: 1px solid var(--border);
-      border-top: 3px solid var(--red);
-      padding: 48px 40px;
-      width: 100%;
-      max-width: 380px;
-      text-align: center;
-    }
-    .login-logo {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 36px;
-      letter-spacing: 3px;
-      color: var(--white);
-      margin-bottom: 4px;
-    }
+    /* LOGIN */
+    .login-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; background: radial-gradient(ellipse at center, #1a0000 0%, var(--black) 70%); }
+    .login-box { background: var(--dark2); border: 1px solid var(--border); border-top: 3px solid var(--red); padding: 48px 40px; width: 100%; max-width: 380px; text-align: center; }
+    .login-logo { font-family: 'Bebas Neue', sans-serif; font-size: 36px; letter-spacing: 3px; color: var(--white); margin-bottom: 4px; }
     .login-logo span { color: var(--red); }
-    .login-sub {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 11px;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 36px;
-    }
-    .login-box input {
-      width: 100%;
-      background: var(--dark3);
-      border: 1px solid var(--border2);
-      color: var(--text);
-      padding: 12px 16px;
-      font-family: 'Barlow', sans-serif;
-      font-size: 14px;
-      outline: none;
-      transition: border-color 0.2s;
-      margin-bottom: 12px;
-    }
+    .login-sub { font-family: 'Barlow Condensed', sans-serif; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); margin-bottom: 36px; }
+    .login-box input { width: 100%; background: var(--dark3); border: 1px solid var(--border2); color: var(--text); padding: 12px 16px; font-family: 'Barlow', sans-serif; font-size: 14px; outline: none; transition: border-color .2s; margin-bottom: 12px; }
     .login-box input:focus { border-color: var(--red); }
-    .login-btn {
-      width: 100%;
-      background: var(--red);
-      color: #fff;
-      border: none;
-      padding: 13px;
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 18px;
-      letter-spacing: 2px;
-      cursor: pointer;
-      transition: background 0.2s;
-      margin-top: 4px;
-    }
+    .login-btn { width: 100%; background: var(--red); color: #fff; border: none; padding: 13px; font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 2px; cursor: pointer; transition: background .2s; margin-top: 4px; }
     .login-btn:hover { background: var(--red-dark); }
-    .login-error {
-      color: var(--red);
-      font-size: 12px;
-      margin-top: 10px;
-      display: none;
-    }
+    .login-btn:disabled { opacity: .5; cursor: not-allowed; }
+    .login-error { color: var(--red); font-size: 12px; margin-top: 10px; display: none; line-height: 1.5; }
+    .login-block-msg { color: #f5a623; font-size: 12px; margin-top: 10px; display: none; }
+    .login-attempts { font-family: 'Barlow Condensed', sans-serif; font-size: 10px; letter-spacing: 1px; color: #555; margin-top: 14px; min-height: 14px; }
 
-    /* ── APP ── */
+    /* APP */
     .app { display: none; }
     .app.active { display: block; }
 
-    /* ── TOPBAR ── */
-    .topbar {
-      background: var(--dark2);
-      border-bottom: 2px solid var(--red);
-      padding: 14px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-    .topbar-logo {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 22px;
-      letter-spacing: 3px;
-      color: var(--white);
-    }
+    /* TOPBAR */
+    .topbar { background: var(--dark2); border-bottom: 2px solid var(--red); padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+    .topbar-logo { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 3px; color: var(--white); }
     .topbar-logo span { color: var(--red); }
-    .topbar-right {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-    .topbar-badge {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      background: rgba(232,25,27,0.15);
-      color: var(--red);
-      border: 1px solid rgba(232,25,27,0.3);
-      padding: 4px 10px;
-    }
-    .btn-logout {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      background: transparent;
-      color: var(--muted);
-      border: 1px solid var(--border);
-      padding: 6px 14px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
+    .topbar-right { display: flex; align-items: center; gap: 16px; }
+    .topbar-badge { font-family: 'Barlow Condensed', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; background: rgba(232,25,27,.15); color: var(--red); border: 1px solid rgba(232,25,27,.3); padding: 4px 10px; }
+    .btn-logout { font-family: 'Barlow Condensed', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; background: transparent; color: var(--muted); border: 1px solid var(--border); padding: 6px 14px; cursor: pointer; transition: all .2s; }
     .btn-logout:hover { color: var(--white); border-color: var(--text); }
+    .firebase-status { font-family: 'Barlow Condensed', sans-serif; font-size: 10px; letter-spacing: 1px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+    .firebase-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--border); transition: background .3s; }
+    .firebase-dot.ok { background: var(--green); }
+    .firebase-dot.err { background: var(--red); }
 
-    /* ── LAYOUT ── */
-    .layout {
-      display: grid;
-      grid-template-columns: 420px 1fr;
-      min-height: calc(100vh - 57px);
-    }
-    @media (max-width: 960px) {
-      .layout { grid-template-columns: 1fr; }
-    }
+    /* LAYOUT */
+    .layout { display: grid; grid-template-columns: 430px 1fr; min-height: calc(100vh - 57px); }
+    @media (max-width: 960px) { .layout { grid-template-columns: 1fr; } }
 
-    /* ── FORM PANEL ── */
-    .form-panel {
-      background: var(--dark);
-      border-right: 1px solid var(--border);
-      padding: 28px 28px 60px;
-      overflow-y: auto;
-    }
-    .panel-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 22px;
-      letter-spacing: 2px;
-      color: var(--white);
-      margin-bottom: 24px;
-      padding-bottom: 14px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .panel-title .dot {
-      width: 8px; height: 8px;
-      background: var(--red);
-      flex-shrink: 0;
-    }
+    /* FORM PANEL */
+    .form-panel { background: var(--dark); border-right: 1px solid var(--border); padding: 28px 28px 60px; overflow-y: auto; }
+    .panel-title { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 2px; color: var(--white); margin-bottom: 24px; padding-bottom: 14px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+    .panel-title .dot { width: 8px; height: 8px; background: var(--red); flex-shrink: 0; }
 
-    /* form fields */
     .field { margin-bottom: 18px; }
-    .field label {
-      display: block;
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 7px;
-    }
+    .field label { display: block; font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 7px; }
     .field label .req { color: var(--red); margin-left: 2px; }
-    .field input[type="text"],
-    .field input[type="date"],
-    .field textarea,
-    .field select {
-      width: 100%;
-      background: var(--dark3);
-      border: 1px solid var(--border2);
-      color: var(--text);
-      padding: 10px 14px;
-      font-family: 'Barlow', sans-serif;
-      font-size: 14px;
-      outline: none;
-      transition: border-color 0.2s;
-      resize: vertical;
-    }
-    .field input:focus, .field textarea:focus, .field select:focus {
-      border-color: var(--red);
-    }
+    .field input[type="text"], .field textarea { width: 100%; background: var(--dark3); border: 1px solid var(--border2); color: var(--text); padding: 10px 14px; font-family: 'Barlow', sans-serif; font-size: 14px; outline: none; transition: border-color .2s; resize: vertical; }
+    .field input:focus, .field textarea:focus { border-color: var(--red); }
     textarea { min-height: 80px; }
 
-    /* photo upload */
-    .photo-upload {
-      border: 2px dashed var(--border2);
-      padding: 30px 20px;
-      text-align: center;
-      cursor: pointer;
-      transition: border-color 0.2s, background 0.2s;
-      position: relative;
-    }
-    .photo-upload:hover, .photo-upload.drag {
-      border-color: var(--red);
-      background: rgba(232,25,27,0.04);
-    }
+    /* PHOTO */
+    .photo-upload { border: 2px dashed var(--border2); padding: 30px 20px; text-align: center; cursor: pointer; transition: border-color .2s, background .2s; }
+    .photo-upload:hover, .photo-upload.drag { border-color: var(--red); background: rgba(232,25,27,.04); }
     .photo-upload input { display: none; }
     .photo-upload-icon { font-size: 36px; margin-bottom: 8px; }
-    .photo-upload p {
-      font-size: 13px;
-      color: var(--muted);
-      margin-bottom: 4px;
-    }
-    .photo-upload span {
-      font-size: 11px;
-      color: var(--border2);
-      font-family: 'Barlow Condensed', sans-serif;
-      letter-spacing: 1px;
-    }
-    .photo-preview {
-      margin-top: 12px;
-      position: relative;
-      display: none;
-    }
+    .photo-upload p { font-size: 13px; color: var(--muted); margin-bottom: 4px; }
+    .photo-upload span { font-size: 11px; color: var(--border2); font-family: 'Barlow Condensed', sans-serif; letter-spacing: 1px; }
+    .photo-preview { margin-top: 12px; position: relative; display: none; }
     .photo-preview.visible { display: block; }
-    .photo-preview img {
-      width: 100%;
-      max-height: 200px;
-      object-fit: cover;
-      display: block;
-      border: 1px solid var(--border);
-    }
-    .photo-remove {
-      position: absolute;
-      top: 8px; right: 8px;
-      background: var(--red);
-      color: #fff;
-      border: none;
-      width: 26px; height: 26px;
-      font-size: 14px;
-      cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-    }
+    .photo-preview img { width: 100%; max-height: 200px; object-fit: cover; display: block; border: 1px solid var(--border); }
+    .photo-remove { position: absolute; top: 8px; right: 8px; background: var(--red); color: #fff; border: none; width: 26px; height: 26px; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
     .photo-remove:hover { background: var(--red-dark); }
 
-    /* diensten checkboxes */
-    .diensten-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
-    .dienst-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--dark3);
-      border: 1px solid var(--border);
-      padding: 8px 12px;
-      cursor: pointer;
-      transition: border-color 0.2s, background 0.2s;
-      user-select: none;
-    }
+    /* DIENSTEN */
+    .diensten-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .dienst-item { display: flex; align-items: center; gap: 8px; background: var(--dark3); border: 1px solid var(--border); padding: 8px 12px; cursor: pointer; transition: border-color .2s, background .2s; user-select: none; }
     .dienst-item:hover { border-color: var(--border2); }
-    .dienst-item.checked {
-      border-color: var(--red);
-      background: rgba(232,25,27,0.08);
-    }
+    .dienst-item.checked { border-color: var(--red); background: rgba(232,25,27,.08); }
     .dienst-item input[type="checkbox"] { display: none; }
-    .dienst-check {
-      width: 16px; height: 16px;
-      border: 1.5px solid var(--border2);
-      flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center;
-      transition: background 0.2s, border-color 0.2s;
-    }
-    .dienst-item.checked .dienst-check {
-      background: var(--red);
-      border-color: var(--red);
-    }
-    .dienst-check-icon {
-      color: #fff;
-      font-size: 10px;
-      display: none;
-    }
+    .dienst-check { width: 16px; height: 16px; border: 1.5px solid var(--border2); flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: background .2s, border-color .2s; }
+    .dienst-item.checked .dienst-check { background: var(--red); border-color: var(--red); }
+    .dienst-check-icon { color: #fff; font-size: 10px; display: none; }
     .dienst-item.checked .dienst-check-icon { display: block; }
-    .dienst-name {
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--muted);
-      line-height: 1.3;
-    }
+    .dienst-name { font-size: 12px; font-weight: 500; color: var(--muted); line-height: 1.3; }
     .dienst-item.checked .dienst-name { color: var(--text); }
 
-    /* stage1 panel */
-    .stage1-panel {
-      display: none;
-      background: rgba(232,25,27,0.05);
-      border: 1px solid rgba(232,25,27,0.2);
-      padding: 16px;
-      margin-top: 12px;
-    }
+    /* STAGE1 */
+    .stage1-panel { display: none; background: rgba(232,25,27,.05); border: 1px solid rgba(232,25,27,.2); padding: 16px; margin-top: 12px; }
     .stage1-panel.visible { display: block; }
-    .stage1-panel .stage1-title {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--red);
-      margin-bottom: 12px;
-    }
-    .power-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-    .power-col-label {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 8px;
-      padding-bottom: 6px;
-      border-bottom: 1px solid var(--border);
-    }
+    .stage1-title { font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--red); margin-bottom: 12px; }
+    .power-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .power-col-label { font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
     .power-col-label.hs { color: var(--red); }
     .power-input-group { display: flex; flex-direction: column; gap: 8px; }
     .power-input-row { display: flex; align-items: center; gap: 6px; }
-    .power-input-row input {
-      flex: 1;
-      background: var(--dark3);
-      border: 1px solid var(--border2);
-      color: var(--text);
-      padding: 8px 10px;
-      font-family: 'Barlow', sans-serif;
-      font-size: 13px;
-      outline: none;
-      transition: border-color 0.2s;
-      width: 100%;
-    }
+    .power-input-row input { flex: 1; background: var(--dark3); border: 1px solid var(--border2); color: var(--text); padding: 8px 10px; font-family: 'Barlow', sans-serif; font-size: 13px; outline: none; transition: border-color .2s; width: 100%; }
     .power-input-row input:focus { border-color: var(--red); }
-    .power-unit {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      color: var(--muted);
-      white-space: nowrap;
-      min-width: 24px;
-    }
+    .power-unit { font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 1px; color: var(--muted); white-space: nowrap; min-width: 24px; }
 
-    /* submit */
-    .btn-submit {
-      width: 100%;
-      background: var(--red);
-      color: #fff;
-      border: none;
-      padding: 14px;
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 20px;
-      letter-spacing: 3px;
-      cursor: pointer;
-      transition: background 0.2s, transform 0.1s;
-      margin-top: 8px;
-    }
+    /* SUBMIT */
+    .submit-row { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
+    .btn-submit { flex: 1; background: var(--red); color: #fff; border: none; padding: 14px; font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 3px; cursor: pointer; transition: background .2s; }
     .btn-submit:hover { background: var(--red-dark); }
-    .btn-submit:active { transform: scale(0.99); }
-    .btn-submit.loading { opacity: 0.6; pointer-events: none; }
+    .btn-submit:disabled { opacity: .5; cursor: not-allowed; }
+    .saving-indicator { display: none; align-items: center; gap: 8px; font-family: 'Barlow Condensed', sans-serif; font-size: 11px; letter-spacing: 1px; color: var(--muted); white-space: nowrap; }
+    .saving-indicator.visible { display: flex; }
+    .saving-spinner { width: 12px; height: 12px; border: 2px solid var(--border); border-top-color: var(--red); border-radius: 50%; animation: spin .7s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
-    .toast {
-      position: fixed;
-      bottom: 24px; right: 24px;
-      background: var(--green);
-      color: #fff;
-      padding: 12px 20px;
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 14px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      border-radius: 0;
-      transform: translateY(80px);
-      opacity: 0;
-      transition: transform 0.3s ease, opacity 0.3s ease;
-      z-index: 9999;
-    }
+    /* TOAST */
+    .toast { position: fixed; bottom: 24px; right: 24px; background: var(--green); color: #fff; padding: 12px 20px; font-family: 'Barlow Condensed', sans-serif; font-size: 14px; font-weight: 700; letter-spacing: 1px; transform: translateY(80px); opacity: 0; transition: transform .3s, opacity .3s; z-index: 9999; }
     .toast.show { transform: translateY(0); opacity: 1; }
     .toast.error { background: var(--red); }
 
-    /* ── PROJECTS LIST PANEL ── */
-    .list-panel {
-      background: var(--dark2);
-      padding: 28px 28px 60px;
-      overflow-y: auto;
-    }
-    .list-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 24px;
-      padding-bottom: 14px;
-      border-bottom: 1px solid var(--border);
-    }
-    .list-count {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
+    /* LIST PANEL */
+    .list-panel { background: var(--dark2); padding: 28px 28px 60px; overflow-y: auto; }
+    .list-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; padding-bottom: 14px; border-bottom: 1px solid var(--border); gap: 12px; flex-wrap: wrap; }
+    .list-count { font-family: 'Barlow Condensed', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
     .list-count strong { color: var(--red); font-size: 16px; }
-
-    .btn-view {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      background: transparent;
-      color: var(--muted);
-      border: 1px solid var(--border);
-      padding: 7px 14px;
-      cursor: pointer;
-      text-decoration: none;
-      transition: all 0.2s;
-    }
+    .btn-view { font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; background: transparent; color: var(--muted); border: 1px solid var(--border); padding: 7px 14px; cursor: pointer; text-decoration: none; transition: all .2s; }
     .btn-view:hover { color: var(--white); border-color: var(--red); }
 
-    /* project row */
-    .project-row {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      background: var(--dark3);
-      border: 1px solid var(--border);
-      padding: 12px 14px;
-      margin-bottom: 10px;
-      transition: border-color 0.2s;
-      animation: rowIn 0.3s ease both;
-    }
-    @keyframes rowIn {
-      from { opacity: 0; transform: translateX(-10px); }
-      to   { opacity: 1; transform: translateX(0); }
-    }
+    .project-row { display: flex; align-items: flex-start; gap: 14px; background: var(--dark3); border: 1px solid var(--border); padding: 12px 14px; margin-bottom: 10px; transition: border-color .2s; animation: rowIn .3s ease both; }
+    @keyframes rowIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
     .project-row:hover { border-color: var(--border2); }
-    .row-thumb {
-      width: 72px;
-      height: 54px;
-      object-fit: cover;
-      flex-shrink: 0;
-      background: var(--border);
-    }
+    .row-thumb { width: 72px; height: 54px; object-fit: cover; flex-shrink: 0; background: var(--border); }
     .row-info { flex: 1; min-width: 0; }
-    .row-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 16px;
-      letter-spacing: 1px;
-      color: var(--white);
-      margin-bottom: 4px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .row-diensten {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 4px;
-    }
-    .row-pill {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 9px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      background: rgba(232,25,27,0.1);
-      color: var(--red);
-      border: 1px solid rgba(232,25,27,0.2);
-      padding: 2px 6px;
-    }
-    .row-date {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 11px;
-      color: var(--muted);
-      letter-spacing: 1px;
-      white-space: nowrap;
-      margin-left: auto;
-      flex-shrink: 0;
-    }
-    .btn-delete {
-      background: transparent;
-      border: 1px solid var(--border);
-      color: var(--muted);
-      width: 30px; height: 30px;
-      font-size: 14px;
-      cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-      transition: all 0.2s;
-    }
+    .row-title { font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 1px; color: var(--white); margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .row-diensten { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 4px; }
+    .row-pill { font-family: 'Barlow Condensed', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; background: rgba(232,25,27,.1); color: var(--red); border: 1px solid rgba(232,25,27,.2); padding: 2px 6px; }
+    .row-power { font-family: 'Barlow Condensed', sans-serif; font-size: 11px; color: var(--muted); letter-spacing: .5px; margin-top: 2px; }
+    .row-power strong { color: var(--red); }
+    .btn-delete { background: transparent; border: 1px solid var(--border); color: var(--muted); width: 30px; height: 30px; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all .2s; margin-top: 2px; }
     .btn-delete:hover { background: var(--red); border-color: var(--red); color: #fff; }
 
-    .empty-list {
-      text-align: center;
-      padding: 60px 20px;
-      color: var(--muted);
-    }
+    .empty-list { text-align: center; padding: 60px 20px; color: var(--muted); }
     .empty-list p { font-size: 13px; margin-top: 10px; }
 
-    /* scrollbar */
     ::-webkit-scrollbar { width: 5px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--border2); }
@@ -553,9 +155,11 @@
   <div class="login-box">
     <div class="login-logo">HS <span>Performance</span></div>
     <div class="login-sub">CMS Beheer</div>
-    <input type="password" id="pwInput" placeholder="Wachtwoord" onkeydown="if(event.key==='Enter')doLogin()" />
-    <button class="login-btn" onclick="doLogin()">Inloggen</button>
-    <div class="login-error" id="loginError">Onjuist wachtwoord</div>
+    <input type="password" id="pwInput" placeholder="Wachtwoord" autocomplete="current-password" />
+    <button class="login-btn" id="loginBtn" onclick="doLogin()">Inloggen</button>
+    <div class="login-error" id="loginError"></div>
+    <div class="login-block-msg" id="loginBlock"></div>
+    <div class="login-attempts" id="attemptsInfo"></div>
   </div>
 </div>
 
@@ -564,6 +168,10 @@
   <div class="topbar">
     <div class="topbar-logo">HS <span>Performance</span></div>
     <div class="topbar-right">
+      <div class="firebase-status">
+        <div class="firebase-dot" id="fbDot"></div>
+        <span id="fbLabel">Verbinden...</span>
+      </div>
       <span class="topbar-badge">CMS Beheer</span>
       <button class="btn-logout" onclick="doLogout()">Uitloggen</button>
     </div>
@@ -574,19 +182,17 @@
     <div class="form-panel">
       <div class="panel-title"><div class="dot"></div> Project Toevoegen</div>
 
-      <!-- Titel -->
       <div class="field">
         <label>Auto / Titel <span class="req">*</span></label>
         <input type="text" id="fTitel" placeholder="bijv. Volkswagen Golf 7 1.4 TSI" />
       </div>
 
-      <!-- Foto -->
       <div class="field">
         <label>Foto</label>
         <div class="photo-upload" id="photoUploadZone" onclick="document.getElementById('fFoto').click()">
           <input type="file" id="fFoto" accept="image/*" onchange="handlePhoto(this)" />
           <div class="photo-upload-icon">📷</div>
-          <p>Klik om een foto te uploaden</p>
+          <p>Klik of sleep een foto hierheen</p>
           <span>JPG, PNG, WEBP – max 5MB</span>
         </div>
         <div class="photo-preview" id="photoPreview">
@@ -595,58 +201,42 @@
         </div>
       </div>
 
-      <!-- Diensten -->
       <div class="field">
         <label>Uitgevoerde Diensten</label>
         <div class="diensten-grid" id="dienstenGrid"></div>
       </div>
 
-      <!-- Stage 1 panel -->
       <div class="stage1-panel" id="stage1Panel">
         <div class="stage1-title">⚡ Vermogensgegevens Stage 1</div>
         <div class="power-grid">
           <div>
             <div class="power-col-label">Standaard</div>
             <div class="power-input-group">
-              <div class="power-input-row">
-                <input type="text" id="fStdPk" placeholder="bijv. 150" />
-                <span class="power-unit">PK</span>
-              </div>
-              <div class="power-input-row">
-                <input type="text" id="fStdNm" placeholder="bijv. 280" />
-                <span class="power-unit">NM</span>
-              </div>
+              <div class="power-input-row"><input type="text" id="fStdPk" placeholder="bijv. 150" /><span class="power-unit">PK</span></div>
+              <div class="power-input-row"><input type="text" id="fStdNm" placeholder="bijv. 280" /><span class="power-unit">NM</span></div>
             </div>
           </div>
           <div>
             <div class="power-col-label hs">HS Performance</div>
             <div class="power-input-group">
-              <div class="power-input-row">
-                <input type="text" id="fHspPk" placeholder="bijv. 200" />
-                <span class="power-unit">PK</span>
-              </div>
-              <div class="power-input-row">
-                <input type="text" id="fHspNm" placeholder="bijv. 350" />
-                <span class="power-unit">NM</span>
-              </div>
+              <div class="power-input-row"><input type="text" id="fHspPk" placeholder="bijv. 200" /><span class="power-unit">PK</span></div>
+              <div class="power-input-row"><input type="text" id="fHspNm" placeholder="bijv. 350" /><span class="power-unit">NM</span></div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Omschrijving -->
       <div class="field" style="margin-top:18px">
         <label>Omschrijving (optioneel)</label>
         <textarea id="fOmschrijving" placeholder="Extra toelichting bij dit project..."></textarea>
       </div>
 
-      <!-- Datum -->
-      <div class="field">
-        <label>Datum</label>
-        <input type="date" id="fDatum" />
+      <div class="submit-row">
+        <button class="btn-submit" id="submitBtn" onclick="submitProject()">Project Toevoegen</button>
+        <div class="saving-indicator" id="savingIndicator">
+          <div class="saving-spinner"></div>Opslaan...
+        </div>
       </div>
-
-      <button class="btn-submit" id="submitBtn" onclick="submitProject()">Project Toevoegen</button>
     </div>
 
     <!-- LIST -->
@@ -665,64 +255,164 @@
 
 <div class="toast" id="toast"></div>
 
-<script>
-  const STORAGE_KEY = 'hsp_projects_v1';
-  const CMS_PW = 'hsperformance2025'; // ← pas dit wachtwoord aan
+<script type="module">
+  import { initializeApp }                        from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+  import { getDatabase, ref, push, remove, onValue } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
 
-  // ── DIENSTEN LIJST ──
+  // ════════════════════════════════════════════════════
+  //  STAP 1: VUL HIER JE FIREBASE CONFIG IN
+  //  (zie README voor hoe je dit aanmaakt)
+  // ════════════════════════════════════════════════════
+  const FIREBASE_CONFIG = {
+    apiKey:            "JOUW_API_KEY",
+    authDomain:        "JOUW_PROJECT_ID.firebaseapp.com",
+    databaseURL:       "https://JOUW_PROJECT_ID-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId:         "JOUW_PROJECT_ID",
+    storageBucket:     "JOUW_PROJECT_ID.appspot.com",
+    messagingSenderId: "JOUW_SENDER_ID",
+    appId:             "JOUW_APP_ID"
+  };
+
+  // ════════════════════════════════════════════════════
+  //  STAP 2: VERVANG DIT DOOR DE HASH VAN JOUW WACHTWOORD
+  //  Genereer op: https://emn178.github.io/online-tools/sha256.html
+  //  Huidig wachtwoord (voor demo): HSPerformance2025!
+  // ════════════════════════════════════════════════════
+  const PASSWORD_HASH = '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08';
+
+  // ════════════════════════════════════════════════════
+
+  const MAX_ATTEMPTS  = 5;
+  const LOCKOUT_MS    = 15 * 60 * 1000;
+
   const DIENSTEN = [
-    { id: 'stage1',     label: 'Stage 1 Chiptuning', isStage1: true },
-    { id: 'dsg',        label: 'DSG / Automaat Tuning' },
-    { id: 'dpf',        label: 'DPF Verwijderen' },
-    { id: 'adblue',     label: 'AdBlue Uitschakelen' },
-    { id: 'egr',        label: 'EGR Uitschakelen' },
-    { id: 'maf',        label: 'Luchtmassameter Wegschrijven' },
-    { id: 'o2nox',      label: 'O2/NOx Sensor Wegschrijven' },
-    { id: 'swirl',      label: 'Swirl Flaps Uitschakelen' },
-    { id: 'startstop',  label: 'Start/Stop Uitschakelen' },
-    { id: 'snelheid',   label: 'Snelheidsbegrenzer Verwijderen' },
-    { id: 'foutcodes',  label: 'Foutcodes Uitschakelen' },
-    { id: 'launch',     label: 'Launch Control' },
-    { id: 'pops',       label: 'Pops & Bangs' },
-    { id: 'hardcut',    label: 'Hardcut Limiter' },
-    { id: 'antilag',    label: 'Antilag' },
+    { id: 'stage1',    label: 'Stage 1 Chiptuning',             isStage1: true },
+    { id: 'dsg',       label: 'DSG / Automaat Tuning' },
+    { id: 'dpf',       label: 'DPF Verwijderen' },
+    { id: 'adblue',    label: 'AdBlue Uitschakelen' },
+    { id: 'egr',       label: 'EGR Uitschakelen' },
+    { id: 'maf',       label: 'Luchtmassameter Wegschrijven' },
+    { id: 'o2nox',     label: 'O2/NOx Sensor Wegschrijven' },
+    { id: 'swirl',     label: 'Swirl Flaps Uitschakelen' },
+    { id: 'startstop', label: 'Start/Stop Uitschakelen' },
+    { id: 'snelheid',  label: 'Snelheidsbegrenzer Verwijderen' },
+    { id: 'foutcodes', label: 'Foutcodes Uitschakelen' },
+    { id: 'launch',    label: 'Launch Control' },
+    { id: 'pops',      label: 'Pops & Bangs' },
+    { id: 'hardcut',   label: 'Hardcut Limiter' },
+    { id: 'antilag',   label: 'Antilag' },
   ];
 
-  let photoData = null;
+  let photoData       = null;
   let checkedDiensten = new Set();
+  let db              = null;
+  let projectsRef     = null;
 
-  // ── LOGIN ──
-  function doLogin() {
-    const pw = document.getElementById('pwInput').value;
-    if (pw === CMS_PW) {
+  // ── SHA-256 ──────────────────────────────────────
+  async function sha256(str) {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  // ── RATE LIMITING ────────────────────────────────
+  const getLock = () => { try { return JSON.parse(sessionStorage.getItem('hsp_lock') || '{"a":0,"u":0}'); } catch { return {a:0,u:0}; } };
+  const setLock = d  => sessionStorage.setItem('hsp_lock', JSON.stringify(d));
+  const isLocked = () => { const d = getLock(); return d.u && Date.now() < d.u ? d.u : false; };
+
+  function recordFail() {
+    const d = getLock();
+    d.a = (d.a || 0) + 1;
+    if (d.a >= MAX_ATTEMPTS) { d.u = Date.now() + LOCKOUT_MS; d.a = 0; }
+    setLock(d); return d;
+  }
+  const resetAttempts = () => sessionStorage.removeItem('hsp_lock');
+
+  function updateAttemptsUI() {
+    const lockUntil = isLocked();
+    const btn   = document.getElementById('loginBtn');
+    const info  = document.getElementById('attemptsInfo');
+    const block = document.getElementById('loginBlock');
+    if (lockUntil) {
+      const min = Math.ceil((lockUntil - Date.now()) / 60000);
+      btn.disabled = true;
+      block.style.display = 'block';
+      block.textContent = `Te veel pogingen. Probeer het over ${min} minuut${min !== 1 ? 'en' : ''} opnieuw.`;
+      info.textContent = '';
+      setTimeout(updateAttemptsUI, 15000);
+    } else {
+      btn.disabled = false;
+      block.style.display = 'none';
+      const d   = getLock();
+      const rem = MAX_ATTEMPTS - (d.a || 0);
+      info.textContent = d.a > 0 ? `Nog ${rem} poging${rem !== 1 ? 'en' : ''} voor blokkade` : '';
+    }
+  }
+
+  // ── LOGIN ─────────────────────────────────────────
+  window.doLogin = async () => {
+    if (isLocked()) { updateAttemptsUI(); return; }
+    const pw  = document.getElementById('pwInput').value;
+    if (!pw) return;
+    const btn = document.getElementById('loginBtn');
+    btn.disabled = true; btn.textContent = '...';
+    const hash = await sha256(pw);
+    document.getElementById('pwInput').value = '';
+
+    if (hash === PASSWORD_HASH) {
+      resetAttempts();
+      document.getElementById('loginError').style.display = 'none';
       document.getElementById('loginWrap').style.display = 'none';
       document.getElementById('appWrap').classList.add('active');
       initApp();
     } else {
-      document.getElementById('loginError').style.display = 'block';
-      document.getElementById('pwInput').value = '';
+      recordFail();
+      const err = document.getElementById('loginError');
+      err.style.display = 'block';
+      err.textContent = 'Onjuist wachtwoord.';
+      btn.textContent = 'Inloggen';
+      updateAttemptsUI();
     }
-  }
-  function doLogout() {
+  };
+
+  window.doLogout = () => {
     document.getElementById('loginWrap').style.display = 'flex';
     document.getElementById('appWrap').classList.remove('active');
-    document.getElementById('pwInput').value = '';
+    document.getElementById('loginBtn').disabled = false;
+    document.getElementById('loginBtn').textContent = 'Inloggen';
+    updateAttemptsUI();
+  };
+
+  // ── FIREBASE ──────────────────────────────────────
+  function initFirebase() {
+    try {
+      const app   = initializeApp(FIREBASE_CONFIG);
+      db          = getDatabase(app);
+      projectsRef = ref(db, 'projects');
+      setFbStatus(true);
+      onValue(projectsRef, snap => {
+        const data = snap.val() || {};
+        const arr  = Object.entries(data).map(([k, v]) => ({ ...v, _key: k }));
+        renderList(arr);
+      }, () => setFbStatus(false));
+    } catch {
+      setFbStatus(false);
+      showToast('Firebase niet geconfigureerd – vul je config in', true);
+    }
   }
 
-  // ── INIT ──
+  function setFbStatus(ok) {
+    document.getElementById('fbDot').className  = 'firebase-dot ' + (ok ? 'ok' : 'err');
+    document.getElementById('fbLabel').textContent = ok ? 'Verbonden' : 'Geen verbinding';
+  }
+
+  // ── APP INIT ──────────────────────────────────────
   function initApp() {
     buildDiensten();
-    setDefaultDate();
-    renderList();
     setupDragDrop();
+    initFirebase();
   }
 
-  function setDefaultDate() {
-    const d = new Date();
-    document.getElementById('fDatum').value = d.toISOString().split('T')[0];
-  }
-
-  // ── DIENSTEN ──
+  // ── DIENSTEN ──────────────────────────────────────
   function buildDiensten() {
     const grid = document.getElementById('dienstenGrid');
     grid.innerHTML = '';
@@ -730,25 +420,24 @@
       const item = document.createElement('label');
       item.className = 'dienst-item';
       item.innerHTML = `
-        <input type="checkbox" value="${d.id}" onchange="toggleDienst('${d.id}', this.checked, ${!!d.isStage1})" />
+        <input type="checkbox" value="${d.id}" />
         <div class="dienst-check"><span class="dienst-check-icon">✓</span></div>
         <span class="dienst-name">${d.label}</span>`;
+      item.addEventListener('click', e => {
+        e.preventDefault();
+        const cb = item.querySelector('input');
+        cb.checked = !cb.checked;
+        item.classList.toggle('checked', cb.checked);
+        if (cb.checked) checkedDiensten.add(d.id);
+        else            checkedDiensten.delete(d.id);
+        if (d.isStage1) document.getElementById('stage1Panel').classList.toggle('visible', cb.checked);
+      });
       grid.appendChild(item);
     });
   }
 
-  function toggleDienst(id, checked, isStage1) {
-    const item = event.currentTarget;
-    item.classList.toggle('checked', checked);
-    if (checked) checkedDiensten.add(id);
-    else checkedDiensten.delete(id);
-    if (isStage1) {
-      document.getElementById('stage1Panel').classList.toggle('visible', checked);
-    }
-  }
-
-  // ── PHOTO ──
-  function handlePhoto(input) {
+  // ── PHOTO ─────────────────────────────────────────
+  window.handlePhoto = input => {
     const file = input.files[0];
     if (!file) return;
     if (file.size > 5 * 1024 * 1024) { showToast('Foto te groot (max 5MB)', true); return; }
@@ -759,89 +448,82 @@
       document.getElementById('photoPreview').classList.add('visible');
     };
     reader.readAsDataURL(file);
-  }
-  function removePhoto() {
+  };
+
+  window.removePhoto = () => {
     photoData = null;
     document.getElementById('fFoto').value = '';
     document.getElementById('photoPreview').classList.remove('visible');
     document.getElementById('photoPreviewImg').src = '';
-  }
+  };
 
-  // drag & drop
   function setupDragDrop() {
     const zone = document.getElementById('photoUploadZone');
-    zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag'); });
-    zone.addEventListener('dragleave', () => zone.classList.remove('drag'));
+    zone.addEventListener('dragover',  e => { e.preventDefault(); zone.classList.add('drag'); });
+    zone.addEventListener('dragleave', ()  => zone.classList.remove('drag'));
     zone.addEventListener('drop', e => {
-      e.preventDefault();
-      zone.classList.remove('drag');
+      e.preventDefault(); zone.classList.remove('drag');
       const file = e.dataTransfer.files[0];
       if (file && file.type.startsWith('image/')) {
-        const dt = new DataTransfer();
-        dt.items.add(file);
-        const input = document.getElementById('fFoto');
-        input.files = dt.files;
-        handlePhoto(input);
+        const dt = new DataTransfer(); dt.items.add(file);
+        const inp = document.getElementById('fFoto'); inp.files = dt.files;
+        window.handlePhoto(inp);
       }
     });
   }
 
-  // ── SUBMIT ──
-  function submitProject() {
+  // ── SUBMIT ────────────────────────────────────────
+  window.submitProject = async () => {
+    if (!db) { showToast('Geen Firebase verbinding', true); return; }
     const titel = document.getElementById('fTitel').value.trim();
     if (!titel) { showToast('Vul een auto / titel in', true); return; }
 
-    const stage1 = checkedDiensten.has('stage1');
+    const stage1  = checkedDiensten.has('stage1');
     const project = {
-      id: Date.now().toString(),
       titel,
-      photo: photoData || '',
-      diensten: DIENSTEN.filter(d => checkedDiensten.has(d.id)).map(d => d.label),
+      photo:        photoData || '',
+      diensten:     DIENSTEN.filter(d => checkedDiensten.has(d.id)).map(d => d.label),
       stage1,
-      stdPk: stage1 ? document.getElementById('fStdPk').value.trim() : '',
-      stdNm: stage1 ? document.getElementById('fStdNm').value.trim() : '',
-      hspPk: stage1 ? document.getElementById('fHspPk').value.trim() : '',
-      hspNm: stage1 ? document.getElementById('fHspNm').value.trim() : '',
+      stdPk:        stage1 ? document.getElementById('fStdPk').value.trim() : '',
+      stdNm:        stage1 ? document.getElementById('fStdNm').value.trim() : '',
+      hspPk:        stage1 ? document.getElementById('fHspPk').value.trim() : '',
+      hspNm:        stage1 ? document.getElementById('fHspNm').value.trim() : '',
       omschrijving: document.getElementById('fOmschrijving').value.trim(),
-      datum: document.getElementById('fDatum').value,
+      ts:           Date.now(),
     };
 
-    const projects = getProjects();
-    projects.push(project);
-    saveProjects(projects);
+    const btn = document.getElementById('submitBtn');
+    const ind = document.getElementById('savingIndicator');
+    btn.disabled = true;
+    ind.classList.add('visible');
 
-    resetForm();
-    renderList();
-    showToast('✓ Project toegevoegd!');
-  }
+    try {
+      await push(projectsRef, project);
+      resetForm();
+      showToast('✓ Project toegevoegd!');
+    } catch(e) {
+      showToast('Opslaan mislukt: ' + e.message, true);
+    } finally {
+      btn.disabled = false;
+      ind.classList.remove('visible');
+    }
+  };
 
   function resetForm() {
     document.getElementById('fTitel').value = '';
     document.getElementById('fOmschrijving').value = '';
-    document.getElementById('fStdPk').value = '';
-    document.getElementById('fStdNm').value = '';
-    document.getElementById('fHspPk').value = '';
-    document.getElementById('fHspNm').value = '';
-    removePhoto();
+    ['fStdPk','fStdNm','fHspPk','fHspNm'].forEach(id => document.getElementById(id).value = '');
+    window.removePhoto();
     checkedDiensten.clear();
-    document.querySelectorAll('.dienst-item').forEach(i => i.classList.remove('checked'));
-    document.querySelectorAll('.dienst-item input').forEach(i => i.checked = false);
+    document.querySelectorAll('.dienst-item').forEach(i => {
+      i.classList.remove('checked');
+      i.querySelector('input').checked = false;
+    });
     document.getElementById('stage1Panel').classList.remove('visible');
-    setDefaultDate();
   }
 
-  // ── STORAGE ──
-  function getProjects() {
-    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
-    catch { return []; }
-  }
-  function saveProjects(arr) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
-  }
-
-  // ── LIST ──
-  function renderList() {
-    const projects = getProjects();
+  // ── RENDER LIST ──────────────────────────────────
+  function renderList(projects) {
     const list = document.getElementById('projectsList');
     document.getElementById('countBadge').textContent = projects.length;
     list.innerHTML = '';
@@ -851,45 +533,56 @@
       return;
     }
 
-    projects.slice().reverse().forEach((p, i) => {
+    projects.slice().sort((a, b) => (b.ts || 0) - (a.ts || 0)).forEach((p, i) => {
       const row = document.createElement('div');
       row.className = 'project-row';
       row.style.animationDelay = `${i * 0.04}s`;
 
-      const pills = (p.diensten || []).slice(0, 3).map(d =>
-        `<span class="row-pill">${d}</span>`
-      ).join('') + (p.diensten?.length > 3 ? `<span class="row-pill">+${p.diensten.length - 3}</span>` : '');
+      const allPills = (p.diensten || []).map(d => `<span class="row-pill">${d}</span>`).join('');
+
+      let powerHtml = '';
+      if (p.stage1 && (p.stdPk || p.hspPk)) {
+        const std = [p.stdPk && `${p.stdPk} PK`, p.stdNm && `${p.stdNm} NM`].filter(Boolean).join(' / ');
+        const hsp = [p.hspPk && `${p.hspPk} PK`, p.hspNm && `${p.hspNm} NM`].filter(Boolean).join(' / ');
+        powerHtml = `<div class="row-power">${std ? 'Std: ' + std : ''}${std && hsp ? ' → ' : ''}<strong>${hsp ? 'HSP: ' + hsp : ''}</strong></div>`;
+      }
 
       row.innerHTML = `
         <img class="row-thumb" src="${p.photo || ''}" alt="" onerror="this.style.background='#333';this.src=''" />
         <div class="row-info">
           <div class="row-title">${p.titel}</div>
-          <div class="row-diensten">${pills}</div>
+          <div class="row-diensten">${allPills}</div>
+          ${powerHtml}
         </div>
-        ${p.datum ? `<div class="row-date">${new Date(p.datum).toLocaleDateString('nl-NL', {day:'2-digit',month:'short',year:'numeric'})}</div>` : ''}
-        <button class="btn-delete" onclick="deleteProject('${p.id}')" title="Verwijderen">✕</button>`;
+        <button class="btn-delete" onclick="deleteProject('${p._key}')" title="Verwijderen">✕</button>`;
 
       list.appendChild(row);
     });
   }
 
-  function deleteProject(id) {
+  window.deleteProject = async key => {
     if (!confirm('Project verwijderen?')) return;
-    const projects = getProjects().filter(p => p.id !== id);
-    saveProjects(projects);
-    renderList();
-    showToast('Project verwijderd');
-  }
+    try {
+      await remove(ref(db, 'projects/' + key));
+      showToast('Project verwijderd');
+    } catch {
+      showToast('Verwijderen mislukt', true);
+    }
+  };
 
-  // ── TOAST ──
+  // ── TOAST ─────────────────────────────────────────
   function showToast(msg, isError = false) {
     const t = document.getElementById('toast');
     t.textContent = msg;
     t.className = 'toast' + (isError ? ' error' : '');
     void t.offsetWidth;
     t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 2800);
+    setTimeout(() => t.classList.remove('show'), 3000);
   }
+
+  // ── BOOT ──────────────────────────────────────────
+  document.getElementById('pwInput').addEventListener('keydown', e => { if (e.key === 'Enter') window.doLogin(); });
+  updateAttemptsUI();
 </script>
 </body>
 </html>
