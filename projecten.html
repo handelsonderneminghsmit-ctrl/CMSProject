@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Projecten – HS Performance</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --red: #e8191b;
+      --red-dark: #b51214;
+      --black: #0a0a0a;
+      --dark: #111111;
+      --dark2: #1a1a1a;
+      --dark3: #222222;
+      --border: #2a2a2a;
+      --text: #e8e8e8;
+      --muted: #888;
+      --white: #ffffff;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Barlow', sans-serif;
+      background: var(--black);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── HEADER ── */
+    .page-header {
+      background: linear-gradient(135deg, var(--black) 0%, #1a0000 50%, var(--black) 100%);
+      border-bottom: 2px solid var(--red);
+      padding: 48px 24px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .page-header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 40px,
+        rgba(232,25,27,0.03) 40px,
+        rgba(232,25,27,0.03) 41px
+      );
+    }
+    .page-header .logo-text {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(36px, 8vw, 64px);
+      letter-spacing: 4px;
+      color: var(--white);
+      position: relative;
+      line-height: 1;
+    }
+    .page-header .logo-text span { color: var(--red); }
+    .page-header .subtitle {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 8px;
+      position: relative;
+    }
+    .header-line {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 20px;
+      position: relative;
+    }
+    .header-line::before, .header-line::after {
+      content: '';
+      height: 1px;
+      width: 60px;
+      background: var(--red);
+    }
+    .header-badge {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+
+    /* ── CONTAINER ── */
+    .container {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 48px 20px 80px;
+    }
+
+    /* ── EMPTY STATE ── */
+    .empty-state {
+      text-align: center;
+      padding: 80px 20px;
+      display: none;
+    }
+    .empty-state.visible { display: block; }
+    .empty-state .icon {
+      font-size: 64px;
+      margin-bottom: 20px;
+      opacity: 0.3;
+    }
+    .empty-state h3 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px;
+      letter-spacing: 2px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .empty-state p { color: var(--muted); font-size: 14px; }
+
+    /* ── GRID ── */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 24px;
+    }
+
+    /* ── CARD ── */
+    .project-card {
+      background: var(--dark2);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      position: relative;
+      transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+      animation: cardIn 0.4s ease both;
+    }
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .project-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--red);
+      box-shadow: 0 12px 40px rgba(232,25,27,0.2);
+    }
+    .project-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--red);
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+      transform-origin: left;
+      z-index: 2;
+    }
+    .project-card:hover::before { transform: scaleX(1); }
+
+    /* photo */
+    .card-photo {
+      width: 100%;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+      display: block;
+      background: var(--dark3);
+      transition: transform 0.4s ease;
+    }
+    .project-card:hover .card-photo { transform: scale(1.03); }
+    .card-photo-wrap { overflow: hidden; position: relative; }
+    .card-photo-wrap::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, transparent 50%, rgba(10,10,10,0.7) 100%);
+    }
+
+    /* card body */
+    .card-body { padding: 20px; }
+
+    .card-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px;
+      letter-spacing: 1.5px;
+      color: var(--white);
+      margin-bottom: 12px;
+      line-height: 1.1;
+    }
+
+    /* diensten pills */
+    .diensten-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+    .dienst-pill {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      background: rgba(232,25,27,0.12);
+      color: var(--red);
+      border: 1px solid rgba(232,25,27,0.25);
+      padding: 3px 8px;
+    }
+
+    /* power stats */
+    .power-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--border);
+      margin-top: 16px;
+    }
+    .power-stat {
+      background: var(--dark3);
+      padding: 12px 14px;
+      text-align: center;
+    }
+    .power-stat.hs { background: rgba(232,25,27,0.08); }
+    .power-stat-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+    .power-stat.hs .power-stat-label { color: var(--red); }
+    .power-stat-value {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 20px;
+      letter-spacing: 1px;
+      color: var(--white);
+      line-height: 1;
+    }
+    .power-stat.hs .power-stat-value { color: var(--red); }
+    .power-stat-sub {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* description */
+    .card-desc {
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--muted);
+      margin-top: 14px;
+      border-top: 1px solid var(--border);
+      padding-top: 14px;
+    }
+
+    /* date */
+    .card-date {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--border);
+      margin-top: 14px;
+    }
+
+    /* ── LIGHTBOX ── */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.92);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      backdrop-filter: blur(4px);
+    }
+    .lightbox.open { display: flex; }
+    .lightbox-inner {
+      background: var(--dark2);
+      border: 1px solid var(--border);
+      max-width: 700px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+      animation: lightIn 0.3s ease;
+    }
+    @keyframes lightIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+    .lightbox-close {
+      position: absolute;
+      top: 12px; right: 12px;
+      background: var(--red);
+      color: #fff;
+      border: none;
+      width: 32px; height: 32px;
+      font-size: 18px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 10;
+      transition: background 0.2s;
+    }
+    .lightbox-close:hover { background: var(--red-dark); }
+    .lightbox img {
+      width: 100%;
+      display: block;
+      max-height: 400px;
+      object-fit: cover;
+    }
+    .lightbox-body { padding: 24px; }
+    .lightbox-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 32px;
+      letter-spacing: 2px;
+      color: var(--white);
+      margin-bottom: 16px;
+    }
+
+    /* ── LOADING ── */
+    .loading {
+      text-align: center;
+      padding: 80px 20px;
+    }
+    .spinner {
+      width: 40px; height: 40px;
+      border: 3px solid var(--border);
+      border-top-color: var(--red);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 20px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading p { color: var(--muted); font-size: 13px; letter-spacing: 1px; }
+
+    /* scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--dark); }
+    ::-webkit-scrollbar-thumb { background: var(--red); }
+
+    @media (max-width: 600px) {
+      .projects-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="page-header">
+  <div class="logo-text">HS <span>Performance</span></div>
+  <div class="subtitle">Chiptuning & Software Optimalisatie</div>
+  <div class="header-line">
+    <span class="header-badge">Onze Projecten</span>
+  </div>
+</header>
+
+<div class="container">
+  <div class="loading" id="loading">
+    <div class="spinner"></div>
+    <p>Projecten laden...</p>
+  </div>
+
+  <div class="empty-state" id="emptyState">
+    <div class="icon">🚗</div>
+    <h3>Nog geen projecten</h3>
+    <p>Voeg projecten toe via het CMS systeem.</p>
+  </div>
+
+  <div class="projects-grid" id="projectsGrid"></div>
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox">
+  <div class="lightbox-inner" id="lightboxInner">
+    <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  </div>
+</div>
+
+<script>
+  const STORAGE_KEY = 'hsp_projects_v1';
+
+  function getProjects() {
+    try {
+      return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    } catch { return []; }
+  }
+
+  function formatDate(iso) {
+    if (!iso) return '';
+    const d = new Date(iso);
+    return d.toLocaleDateString('nl-NL', { day: '2-digit', month: 'long', year: 'numeric' });
+  }
+
+  function renderProjects() {
+    const projects = getProjects();
+    const grid = document.getElementById('projectsGrid');
+    const empty = document.getElementById('emptyState');
+    const loading = document.getElementById('loading');
+
+    loading.style.display = 'none';
+    grid.innerHTML = '';
+
+    if (!projects.length) {
+      empty.classList.add('visible');
+      return;
+    }
+    empty.classList.remove('visible');
+
+    projects.slice().reverse().forEach((p, i) => {
+      const card = document.createElement('div');
+      card.className = 'project-card';
+      card.style.animationDelay = `${i * 0.06}s`;
+      card.onclick = () => openLightbox(p);
+
+      const diensten = (p.diensten || []).map(d =>
+        `<span class="dienst-pill">${d}</span>`
+      ).join('');
+
+      let powerHtml = '';
+      if (p.stage1 && (p.stdPk || p.hspPk)) {
+        powerHtml = `
+          <div class="power-stats">
+            <div class="power-stat">
+              <div class="power-stat-label">Standaard</div>
+              <div class="power-stat-value">${p.stdPk || '–'} PK</div>
+              <div class="power-stat-sub">${p.stdNm ? p.stdNm + ' NM' : ''}</div>
+            </div>
+            <div class="power-stat hs">
+              <div class="power-stat-label">HS Performance</div>
+              <div class="power-stat-value">${p.hspPk || '–'} PK</div>
+              <div class="power-stat-sub">${p.hspNm ? p.hspNm + ' NM' : ''}</div>
+            </div>
+          </div>`;
+      }
+
+      card.innerHTML = `
+        <div class="card-photo-wrap">
+          <img class="card-photo" src="${p.photo || ''}" alt="${p.titel || ''}" loading="lazy" onerror="this.style.background='#222';this.src=''" />
+        </div>
+        <div class="card-body">
+          <div class="card-title">${p.titel || 'Project'}</div>
+          ${diensten ? `<div class="diensten-row">${diensten}</div>` : ''}
+          ${powerHtml}
+          ${p.omschrijving ? `<div class="card-desc">${p.omschrijving}</div>` : ''}
+          ${p.datum ? `<div class="card-date">${formatDate(p.datum)}</div>` : ''}
+        </div>`;
+
+      grid.appendChild(card);
+    });
+  }
+
+  function openLightbox(p) {
+    const lb = document.getElementById('lightbox');
+    const inner = document.getElementById('lightboxInner');
+
+    const diensten = (p.diensten || []).map(d =>
+      `<span class="dienst-pill">${d}</span>`
+    ).join('');
+
+    let powerHtml = '';
+    if (p.stage1 && (p.stdPk || p.hspPk)) {
+      powerHtml = `
+        <div class="power-stats" style="margin-bottom:16px">
+          <div class="power-stat">
+            <div class="power-stat-label">Standaard</div>
+            <div class="power-stat-value">${p.stdPk || '–'} PK</div>
+            <div class="power-stat-sub">${p.stdNm ? p.stdNm + ' NM' : ''}</div>
+          </div>
+          <div class="power-stat hs">
+            <div class="power-stat-label">HS Performance</div>
+            <div class="power-stat-value">${p.hspPk || '–'} PK</div>
+            <div class="power-stat-sub">${p.hspNm ? p.hspNm + ' NM' : ''}</div>
+          </div>
+        </div>`;
+    }
+
+    inner.innerHTML = `
+      <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+      <img src="${p.photo || ''}" alt="${p.titel}" onerror="this.style.display='none'" />
+      <div class="lightbox-body">
+        <div class="lightbox-title">${p.titel || 'Project'}</div>
+        ${diensten ? `<div class="diensten-row" style="margin-bottom:16px">${diensten}</div>` : ''}
+        ${powerHtml}
+        ${p.omschrijving ? `<p style="font-size:14px;color:#aaa;line-height:1.7">${p.omschrijving}</p>` : ''}
+        ${p.datum ? `<div class="card-date" style="margin-top:16px">${formatDate(p.datum)}</div>` : ''}
+      </div>`;
+
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.getElementById('lightbox').addEventListener('click', function(e) {
+    if (e.target === this) closeLightbox();
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeLightbox();
+  });
+
+  // listen for cross-page storage updates
+  window.addEventListener('storage', () => renderProjects());
+
+  renderProjects();
+</script>
+</body>
+</html>
