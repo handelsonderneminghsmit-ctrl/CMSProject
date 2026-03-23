@@ -29,8 +29,6 @@
     .login-btn:hover { background: var(--red-dark); }
     .login-btn:disabled { opacity: .5; cursor: not-allowed; }
     .login-error { color: var(--red); font-size: 12px; margin-top: 10px; display: none; line-height: 1.5; }
-    .login-block-msg { color: #f5a623; font-size: 12px; margin-top: 10px; display: none; }
-    .login-attempts { font-family: 'Barlow Condensed', sans-serif; font-size: 10px; letter-spacing: 1px; color: #555; margin-top: 14px; min-height: 14px; }
 
     /* APP */
     .app { display: none; }
@@ -155,11 +153,10 @@
   <div class="login-box">
     <div class="login-logo">HS <span>Performance</span></div>
     <div class="login-sub">CMS Beheer</div>
+    <input type="email" id="emailInput" placeholder="E-mailadres" autocomplete="email" />
     <input type="password" id="pwInput" placeholder="Wachtwoord" autocomplete="current-password" />
     <button class="login-btn" id="loginBtn" onclick="doLogin()">Inloggen</button>
     <div class="login-error" id="loginError"></div>
-    <div class="login-block-msg" id="loginBlock"></div>
-    <div class="login-attempts" id="attemptsInfo"></div>
   </div>
 </div>
 
@@ -170,9 +167,9 @@
     <div class="topbar-right">
       <div class="firebase-status">
         <div class="firebase-dot" id="fbDot"></div>
-        <span id="fbLabel">Verbinden...</span>
+        <span id="fbLabel">Niet ingelogd</span>
       </div>
-      <span class="topbar-badge">CMS Beheer</span>
+      <span class="topbar-badge" id="userEmail" style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
       <button class="btn-logout" onclick="doLogout()">Uitloggen</button>
     </div>
   </div>
@@ -256,34 +253,22 @@
 <div class="toast" id="toast"></div>
 
 <script type="module">
-  import { initializeApp }                        from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+  import { initializeApp }                           from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
   import { getDatabase, ref, push, remove, onValue } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
+  import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged }
+                                                     from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 
   // ─── FIREBASE CONFIG ────────────────────────────────
-  // De API key is zichtbaar maar veilig:
-  // - In Google Cloud is de key beperkt tot jouw GitHub Pages domein
-  // - Firebase regels staan schrijven alleen toe via authenticatie
-  // - Zie README > Beveiliging voor de exacte instellingen
+const firebaseConfig = {
+  apiKey: "AIzaSyAWKsTh5rZWMk_8LWIYDBMlTavNa02m7yQ",
+  authDomain: "hspcms-ffcd0.firebaseapp.com",
+  databaseURL: "https://hspcms-ffcd0-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "hspcms-ffcd0",
+  storageBucket: "hspcms-ffcd0.firebasestorage.app",
+  messagingSenderId: "1073058165129",
+  appId: "1:1073058165129:web:35bd6a5e7fdef49ef4f158"
+};
   // ────────────────────────────────────────────────────
-  const FIREBASE_CONFIG = {
-    apiKey:            "AIzaSyAWKsTh5rZWMk_8LWIYDBMlTavNa02m7yQ",   // ← vul jouw apiKey in
-    authDomain:        "hspcms-ffcd0.firebaseapp.com",
-    databaseURL:       "https://hspcms-ffcd0-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId:         "hspcms-ffcd0",
-    storageBucket:     "hspcms-ffcd0.firebasestorage.app",
-    messagingSenderId: "1073058165129",
-    appId:             "1:1073058165129:web:35bd6a5e7fdef49ef4f158"
-  };
-
-  // ─── WACHTWOORD HASH ─────────────────────────────────
-  // Genereer jouw eigen hash op: https://emn178.github.io/online-tools/sha256.html
-  // Vervang de waarde hieronder door de SHA-256 hash van jouw wachtwoord
-  // ────────────────────────────────────────────────────
-  const PASSWORD_HASH = 'b604566ca11093c31e3741af42d52db479b56b6f83ceda51794568affaf532d4';
-  // ────────────────────────────────────────────────────
-
-  const MAX_ATTEMPTS  = 5;
-  const LOCKOUT_MS    = 15 * 60 * 1000;
 
   const DIENSTEN = [
     { id: 'stage1',    label: 'Stage 1 Chiptuning',             isStage1: true },
@@ -306,116 +291,83 @@
   let photoData       = null;
   let checkedDiensten = new Set();
   let db              = null;
+  let auth            = null;
   let projectsRef     = null;
 
-  // ── SHA-256 ──────────────────────────────────────
-  async function sha256(str) {
-    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
-    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
-  }
+  // ── FIREBASE INIT ─────────────────────────────────
+  const app  = initializeApp(FIREBASE_CONFIG);
+  db         = getDatabase(app);
+  auth       = getAuth(app);
+  projectsRef = ref(db, 'projects');
 
-  // ── RATE LIMITING ────────────────────────────────
-  const getLock = () => { try { return JSON.parse(sessionStorage.getItem('hsp_lock') || '{"a":0,"u":0}'); } catch { return {a:0,u:0}; } };
-  const setLock = d  => sessionStorage.setItem('hsp_lock', JSON.stringify(d));
-  const isLocked = () => { const d = getLock(); return d.u && Date.now() < d.u ? d.u : false; };
-
-  function recordFail() {
-    const d = getLock();
-    d.a = (d.a || 0) + 1;
-    if (d.a >= MAX_ATTEMPTS) { d.u = Date.now() + LOCKOUT_MS; d.a = 0; }
-    setLock(d); return d;
-  }
-  const resetAttempts = () => sessionStorage.removeItem('hsp_lock');
-
-  function updateAttemptsUI() {
-    const lockUntil = isLocked();
-    const btn   = document.getElementById('loginBtn');
-    const info  = document.getElementById('attemptsInfo');
-    const block = document.getElementById('loginBlock');
-    if (lockUntil) {
-      const min = Math.ceil((lockUntil - Date.now()) / 60000);
-      btn.disabled = true;
-      block.style.display = 'block';
-      block.textContent = `Te veel pogingen. Probeer het over ${min} minuut${min !== 1 ? 'en' : ''} opnieuw.`;
-      info.textContent = '';
-      setTimeout(updateAttemptsUI, 15000);
+  // ── AUTH STATE ────────────────────────────────────
+  onAuthStateChanged(auth, user => {
+    if (user) {
+      document.getElementById('loginWrap').style.display = 'none';
+      document.getElementById('appWrap').classList.add('active');
+      document.getElementById('userEmail').textContent = user.email;
+      setFbStatus(true);
+      initApp();
     } else {
-      btn.disabled = false;
-      block.style.display = 'none';
-      const d   = getLock();
-      const rem = MAX_ATTEMPTS - (d.a || 0);
-      info.textContent = d.a > 0 ? `Nog ${rem} poging${rem !== 1 ? 'en' : ''} voor blokkade` : '';
+      document.getElementById('loginWrap').style.display = 'flex';
+      document.getElementById('appWrap').classList.remove('active');
+      setFbStatus(false);
     }
-  }
+  });
 
   // ── LOGIN ─────────────────────────────────────────
   window.doLogin = async () => {
-    if (isLocked()) { updateAttemptsUI(); return; }
-    const pw  = document.getElementById('pwInput').value;
-    if (!pw) return;
+    const email = document.getElementById('emailInput').value.trim();
+    const pw    = document.getElementById('pwInput').value;
+    if (!email || !pw) return;
+
     const btn = document.getElementById('loginBtn');
-    btn.disabled = true; btn.textContent = '...';
-    const hash = await sha256(pw);
-    document.getElementById('pwInput').value = '';
+    btn.disabled = true;
+    btn.textContent = '...';
+    document.getElementById('loginError').style.display = 'none';
 
-    if (hash === PASSWORD_HASH) {
-      resetAttempts();
-      document.getElementById('loginError').style.display = 'none';
-      document.getElementById('loginWrap').style.display = 'none';
-      document.getElementById('appWrap').classList.add('active');
-      initApp();
-    } else {
-      recordFail();
-      const err = document.getElementById('loginError');
-      err.style.display = 'block';
-      err.textContent = 'Onjuist wachtwoord.';
-      btn.textContent = 'Inloggen';
-      updateAttemptsUI();
-    }
-  };
-
-  window.doLogout = () => {
-    document.getElementById('loginWrap').style.display = 'flex';
-    document.getElementById('appWrap').classList.remove('active');
-    document.getElementById('loginBtn').disabled = false;
-    document.getElementById('loginBtn').textContent = 'Inloggen';
-    updateAttemptsUI();
-  };
-
-  // ── FIREBASE ──────────────────────────────────────
-  function initFirebase() {
     try {
-      const app   = initializeApp(FIREBASE_CONFIG);
-      db          = getDatabase(app);
-      projectsRef = ref(db, 'projects');
-      setFbStatus(true);
-      onValue(projectsRef, snap => {
-        const data = snap.val() || {};
-        const arr  = Object.entries(data).map(([k, v]) => ({ ...v, _key: k }));
-        renderList(arr);
-      }, () => setFbStatus(false));
-    } catch {
-      setFbStatus(false);
-      showToast('Firebase niet geconfigureerd – vul je config in', true);
+      await signInWithEmailAndPassword(auth, email, pw);
+      document.getElementById('pwInput').value = '';
+    } catch (e) {
+      const msg = e.code === 'auth/invalid-credential' || e.code === 'auth/wrong-password' || e.code === 'auth/user-not-found'
+        ? 'Onjuist e-mailadres of wachtwoord.'
+        : e.code === 'auth/too-many-requests'
+        ? 'Te veel pogingen. Probeer het later opnieuw.'
+        : 'Inloggen mislukt. Controleer je gegevens.';
+      const err = document.getElementById('loginError');
+      err.textContent = msg;
+      err.style.display = 'block';
+      btn.textContent = 'Inloggen';
+      btn.disabled = false;
     }
-  }
+  };
 
+  window.doLogout = async () => {
+    await signOut(auth);
+  };
+
+  // ── FIREBASE STATUS ───────────────────────────────
   function setFbStatus(ok) {
-    document.getElementById('fbDot').className  = 'firebase-dot ' + (ok ? 'ok' : 'err');
-    document.getElementById('fbLabel').textContent = ok ? 'Verbonden' : 'Geen verbinding';
+    document.getElementById('fbDot').className     = 'firebase-dot ' + (ok ? 'ok' : 'err');
+    document.getElementById('fbLabel').textContent = ok ? 'Verbonden' : 'Niet ingelogd';
   }
 
   // ── APP INIT ──────────────────────────────────────
   function initApp() {
     buildDiensten();
     setupDragDrop();
-    initFirebase();
+    onValue(projectsRef, snap => {
+      const data = snap.val() || {};
+      const arr  = Object.entries(data).map(([k, v]) => ({ ...v, _key: k }));
+      renderList(arr);
+    }, () => setFbStatus(false));
   }
 
   // ── DIENSTEN ──────────────────────────────────────
   function buildDiensten() {
     const grid = document.getElementById('dienstenGrid');
-    grid.innerHTML = '';
+    if (grid.children.length) return;
     DIENSTEN.forEach(d => {
       const item = document.createElement('label');
       item.className = 'dienst-item';
@@ -459,6 +411,8 @@
 
   function setupDragDrop() {
     const zone = document.getElementById('photoUploadZone');
+    if (zone._dd) return;
+    zone._dd = true;
     zone.addEventListener('dragover',  e => { e.preventDefault(); zone.classList.add('drag'); });
     zone.addEventListener('dragleave', ()  => zone.classList.remove('drag'));
     zone.addEventListener('drop', e => {
@@ -474,7 +428,7 @@
 
   // ── SUBMIT ────────────────────────────────────────
   window.submitProject = async () => {
-    if (!db) { showToast('Geen Firebase verbinding', true); return; }
+    if (!auth.currentUser) { showToast('Niet ingelogd', true); return; }
     const titel = document.getElementById('fTitel').value.trim();
     if (!titel) { showToast('Vul een auto / titel in', true); return; }
 
@@ -522,7 +476,7 @@
     document.getElementById('stage1Panel').classList.remove('visible');
   }
 
-  // ── RENDER LIST ──────────────────────────────────
+  // ── RENDER LIST ───────────────────────────────────
   function renderList(projects) {
     const list = document.getElementById('projectsList');
     document.getElementById('countBadge').textContent = projects.length;
@@ -582,7 +536,7 @@
 
   // ── BOOT ──────────────────────────────────────────
   document.getElementById('pwInput').addEventListener('keydown', e => { if (e.key === 'Enter') window.doLogin(); });
-  updateAttemptsUI();
+  document.getElementById('emailInput').addEventListener('keydown', e => { if (e.key === 'Enter') window.doLogin(); });
 </script>
 </body>
 </html>
