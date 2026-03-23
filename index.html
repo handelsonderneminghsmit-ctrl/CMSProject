@@ -295,7 +295,7 @@ const firebaseConfig = {
   let projectsRef     = null;
 
   // ── FIREBASE INIT ─────────────────────────────────
-  const app  = initializeApp(FIREBASE_CONFIG);
+const app = initializeApp(firebaseConfig);
   db         = getDatabase(app);
   auth       = getAuth(app);
   projectsRef = ref(db, 'projects');
