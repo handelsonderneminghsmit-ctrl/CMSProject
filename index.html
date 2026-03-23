@@ -259,12 +259,14 @@
   import { initializeApp }                        from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
   import { getDatabase, ref, push, remove, onValue } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
 
-  // ════════════════════════════════════════════════════
-  //  STAP 1: VUL HIER JE FIREBASE CONFIG IN
-  //  (zie README voor hoe je dit aanmaakt)
-  // ════════════════════════════════════════════════════
+  // ─── FIREBASE CONFIG ────────────────────────────────
+  // De API key is zichtbaar maar veilig:
+  // - In Google Cloud is de key beperkt tot jouw GitHub Pages domein
+  // - Firebase regels staan schrijven alleen toe via authenticatie
+  // - Zie README > Beveiliging voor de exacte instellingen
+  // ────────────────────────────────────────────────────
   const FIREBASE_CONFIG = {
-    apiKey:            "AIzaSyAWKsTh5rZWMk_8LWIYDBMlTavNa02m7yQ",          // ← vul jouw apiKey in (staat in Firebase Console)
+    apiKey:            "JOUW_API_KEY",   // ← vul jouw apiKey in
     authDomain:        "hspcms-ffcd0.firebaseapp.com",
     databaseURL:       "https://hspcms-ffcd0-default-rtdb.europe-west1.firebasedatabase.app",
     projectId:         "hspcms-ffcd0",
@@ -273,14 +275,12 @@
     appId:             "1:1073058165129:web:35bd6a5e7fdef49ef4f158"
   };
 
-  // ════════════════════════════════════════════════════
-  //  STAP 2: VERVANG DIT DOOR DE HASH VAN JOUW WACHTWOORD
-  //  Genereer op: https://emn178.github.io/online-tools/sha256.html
-  //  Huidig wachtwoord (voor demo): HSPerformance2025!
-  // ════════════════════════════════════════════════════
-  const PASSWORD_HASH = 'b604566ca11093c31e3741af42d52db479b56b6f83ceda51794568affaf532d4';
-
-  // ════════════════════════════════════════════════════
+  // ─── WACHTWOORD HASH ─────────────────────────────────
+  // Genereer jouw eigen hash op: https://emn178.github.io/online-tools/sha256.html
+  // Vervang de waarde hieronder door de SHA-256 hash van jouw wachtwoord
+  // ────────────────────────────────────────────────────
+  const PASSWORD_HASH = '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08';
+  // ────────────────────────────────────────────────────
 
   const MAX_ATTEMPTS  = 5;
   const LOCKOUT_MS    = 15 * 60 * 1000;
