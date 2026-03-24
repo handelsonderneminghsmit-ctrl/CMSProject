@@ -241,7 +241,7 @@ const firebaseConfig = {
   }
 
   try {
-    const app = initializeApp(FIREBASE_CONFIG);
+    const app = initializeApp(firebaseConfig);
     const db  = getDatabase(app);
     onValue(ref(db, 'projects'), snap => {
       const raw = snap.val() || {};
