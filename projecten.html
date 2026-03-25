@@ -15,7 +15,7 @@
       --border: #2a2a2a; --text: #e8e8e8; --muted: #888; --white: #fff;
     }
     html { scroll-behavior: smooth; }
-    body { font-family: 'Barlow', sans-serif; background: var(--black); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+    body { font-family: 'Barlow', sans-serif; background: transparent; color: var(--text); min-height: 100vh; overflow-x: hidden; }
 
     /* HEADER */
     .page-header { background: linear-gradient(135deg, var(--black) 0%, #1a0000 50%, var(--black) 100%); border-bottom: 2px solid var(--red); padding: 48px 24px 40px; text-align: center; position: relative; overflow: hidden; }
@@ -27,7 +27,7 @@
     .header-line::before, .header-line::after { content: ''; height: 1px; width: 60px; background: var(--red); }
     .header-badge { font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--red); }
 
-    .container { max-width: 1300px; margin: 0 auto; padding: 48px 20px 80px; }
+    .container { max-width: 1300px; margin: 0 auto; padding: 24px 20px 40px; }
 
     .loading { text-align: center; padding: 80px 20px; }
     .spinner { width: 40px; height: 40px; border: 3px solid var(--border); border-top-color: var(--red); border-radius: 50%; animation: spin .8s linear infinite; margin: 0 auto 20px; }
@@ -128,12 +128,6 @@
   </style>
 </head>
 <body>
-
-<header class="page-header">
-  <div class="logo-text">HS <span>Performance</span></div>
-  <div class="subtitle">Chiptuning & Software Optimalisatie</div>
-  <div class="header-line"><span class="header-badge">Onze Projecten</span></div>
-</header>
 
 <div class="container">
   <div class="loading" id="loading"><div class="spinner"></div><p>Projecten laden...</p></div>
