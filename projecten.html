@@ -51,7 +51,7 @@
 
     .card-photo-wrap { overflow: hidden; position: relative; flex-shrink: 0; }
     .card-photo-wrap::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 40%, rgba(10,10,10,.8) 100%); }
-    .card-photo { width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block; background: var(--dark3); transition: transform .5s; }
+    .card-photo { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; background: var(--dark3); transition: transform .5s; }
     .project-card:hover .card-photo { transform: scale(1.04); }
 
     /* No photo placeholder */
@@ -96,7 +96,7 @@
     @keyframes lightIn { from { opacity: 0; transform: scale(.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
     .lightbox-close { position: absolute; top: 12px; right: 12px; background: var(--red); color: #fff; border: none; width: 34px; height: 34px; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10; transition: background .2s; }
     .lightbox-close:hover { background: var(--red-dark); }
-    .lightbox-photo { width: 100%; display: block; max-height: 420px; object-fit: cover; }
+    .lightbox-photo { width: 100%; display: block; max-height: 80vh; object-fit: contain; background: #111; }
     .lightbox-body { padding: 28px; display: flex; flex-direction: column; gap: 20px; }
     .lightbox-title { font-family: 'Bebas Neue', sans-serif; font-size: 36px; letter-spacing: 2px; color: var(--white); line-height: 1; }
 
@@ -241,7 +241,7 @@ const firebaseConfig = {
   }
 
   try {
-    const app = initializeApp(firebaseConfig);
+    const app = initializeApp(FIREBASE_CONFIG);
     const db  = getDatabase(app);
     onValue(ref(db, 'projects'), snap => {
       const raw = snap.val() || {};
