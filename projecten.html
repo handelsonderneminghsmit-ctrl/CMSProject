@@ -51,7 +51,7 @@
 
     .card-photo-wrap { overflow: hidden; position: relative; flex-shrink: 0; }
     .card-photo-wrap::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 40%, rgba(10,10,10,.8) 100%); }
-    .card-photo { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; background: var(--dark3); transition: transform .5s; }
+    .card-photo { width: 100%; display: block; background: #111; object-fit: contain; transition: transform .5s; max-height: 280px; }
     .project-card:hover .card-photo { transform: scale(1.04); }
 
     /* No photo placeholder */
