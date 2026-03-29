@@ -34,7 +34,7 @@
     .empty-state h3 { font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 2px; color: var(--muted); }
 
     /* ── GRID ── */
-    .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; align-items: stretch; }
+    .projects-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; align-items: stretch; }
 
     /* ── CARD ── */
     .project-card {
@@ -58,17 +58,17 @@
       background: linear-gradient(135deg, #1c1c1c 0%, #141414 100%);
       border-top: 3px solid var(--red);
       border-bottom: 1px solid #252525;
-      padding: 16px 18px 14px;
+      padding: 18px 22px 16px;
     }
-    .card-title { font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 2.5px; color: #fff; line-height: 1.1; }
+    .card-title { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 2.5px; color: #fff; line-height: 1.1; }
 
     .card-photo-wrap { overflow: hidden; position: relative; flex-shrink: 0; }
-    .card-photo { width: 100%; display: block; background: #0a0a0a; object-fit: contain; max-height: 220px; transition: transform .4s; }
+    .card-photo { width: 100%; display: block; background: #0a0a0a; object-fit: contain; max-height: 280px; transition: transform .4s; }
     .project-card:hover .card-photo { transform: scale(1.03); }
     .card-no-photo { width: 100%; aspect-ratio: 16/9; background: #0d0d0d; display: flex; align-items: center; justify-content: center; }
     .card-no-photo svg { opacity: .1; }
 
-    .card-body { padding: 14px 18px 18px; display: flex; flex-direction: column; gap: 12px; flex: 1; }
+    .card-body { padding: 16px 20px 22px; display: flex; flex-direction: column; gap: 14px; flex: 1; }
 
     /* diensten op kaart */
     .diensten-label { font-family: 'Barlow Condensed', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #555; display: flex; align-items: center; gap: 8px; }
@@ -167,6 +167,7 @@
     @media (max-width: 600px) {
       .container { padding: 12px 10px 32px; }
       .projects-grid { grid-template-columns: 1fr; gap: 12px; }
+      .card-title { font-size: 20px; }
       .card-title { font-size: 20px; }
       .card-header { padding: 12px 14px 10px; }
       .card-body { padding: 10px 14px 14px; }
