@@ -173,6 +173,10 @@
 </div>
 
 <script>
+  // Scroll de volledige pagina (inclusief parent van iframe) naar boven
+  try { window.top.scrollTo(0, 0); } catch(e) {}
+  window.scrollTo(0, 0);
+
   function calcGain(a, b) {
     const d = parseInt(b) - parseInt(a);
     return (!a || !b || isNaN(d) || d <= 0) ? null : '+' + d;
