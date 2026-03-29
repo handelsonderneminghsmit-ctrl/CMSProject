@@ -15,339 +15,212 @@
       --border: #2a2a2a; --text: #e8e8e8; --muted: #888; --white: #fff;
     }
     html { scroll-behavior: smooth; }
-    body { font-family: 'Barlow', sans-serif; background: transparent; color: var(--text); min-height: 100vh; overflow-x: hidden; }
+    body { font-family: 'Barlow', sans-serif; background: transparent; color: var(--text); overflow-x: hidden; }
 
-    /* HEADER */
-    .page-header { background: linear-gradient(135deg, var(--black) 0%, #1a0000 50%, var(--black) 100%); border-bottom: 2px solid var(--red); padding: 48px 24px 40px; text-align: center; position: relative; overflow: hidden; }
-    .page-header::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(-45deg, transparent, transparent 40px, rgba(232,25,27,.03) 40px, rgba(232,25,27,.03) 41px); }
-    .logo-text { font-family: 'Bebas Neue', sans-serif; font-size: clamp(36px,8vw,64px); letter-spacing: 4px; color: var(--white); position: relative; line-height: 1; }
-    .logo-text span { color: var(--red); }
-    .subtitle { font-family: 'Barlow Condensed', sans-serif; font-size: 14px; font-weight: 600; letter-spacing: 4px; text-transform: uppercase; color: var(--muted); margin-top: 8px; position: relative; }
-    .header-line { display: flex; align-items: center; gap: 12px; justify-content: center; margin-top: 20px; position: relative; }
-    .header-line::before, .header-line::after { content: ''; height: 1px; width: 60px; background: var(--red); }
-    .header-badge { font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--red); }
+    /* ── VIEWS ── */
+    #view-grid   { display: block; }
+    #view-detail { display: none; }
 
-    .container { max-width: 1300px; margin: 0 auto; padding: 24px 20px 40px; }
+    .container { max-width: 1300px; margin: 0 auto; padding: 24px 16px 48px; }
 
-    .loading { text-align: center; padding: 80px 20px; }
-    .spinner { width: 40px; height: 40px; border: 3px solid var(--border); border-top-color: var(--red); border-radius: 50%; animation: spin .8s linear infinite; margin: 0 auto 20px; }
+    /* ── LOADING / EMPTY ── */
+    .loading { text-align: center; padding: 60px 20px; }
+    .spinner { width: 36px; height: 36px; border: 3px solid var(--border); border-top-color: var(--red); border-radius: 50%; animation: spin .8s linear infinite; margin: 0 auto 16px; }
     @keyframes spin { to { transform: rotate(360deg); } }
-    .loading p { color: var(--muted); font-size: 13px; letter-spacing: 1px; }
-
-    .empty-state { text-align: center; padding: 80px 20px; display: none; }
+    .loading p { color: var(--muted); font-size: 13px; }
+    .empty-state { text-align: center; padding: 60px 20px; display: none; }
     .empty-state.visible { display: block; }
-    .empty-state .icon { font-size: 64px; margin-bottom: 20px; opacity: .3; }
-    .empty-state h3 { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 2px; color: var(--muted); margin-bottom: 8px; }
-    .empty-state p { color: var(--muted); font-size: 14px; }
+    .empty-state .icon { font-size: 48px; margin-bottom: 16px; opacity: .3; }
+    .empty-state h3 { font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 2px; color: var(--muted); }
 
-    .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 28px; align-items: stretch; }
+    /* ── GRID ── */
+    .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; align-items: stretch; }
 
-    /* CARD */
+    /* ── CARD ── */
     .project-card {
       background: #0f0f0f;
       border: 1px solid #2a2a2a;
       border-bottom: 3px solid #1a1a1a;
       overflow: hidden;
-      position: relative;
-      transition: transform .3s, border-color .3s, box-shadow .3s;
       cursor: pointer;
       animation: cardIn .4s ease both;
       display: flex;
       flex-direction: column;
-      box-shadow: 0 4px 24px rgba(0,0,0,.6);
+      box-shadow: 0 4px 20px rgba(0,0,0,.5);
+      transition: transform .25s, border-color .25s, box-shadow .25s;
       touch-action: manipulation;
       -webkit-tap-highlight-color: transparent;
     }
-    @keyframes cardIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    .project-card:hover {
-      transform: translateY(-6px);
-      border-color: var(--red);
-      border-bottom-color: var(--red-dark);
-      box-shadow: 0 20px 60px rgba(232,25,27,.3), 0 4px 24px rgba(0,0,0,.8);
+    @keyframes cardIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+    .project-card:hover { transform: translateY(-4px); border-color: var(--red); box-shadow: 0 16px 40px rgba(232,25,27,.2); }
+
+    .card-header {
+      background: linear-gradient(135deg, #1c1c1c 0%, #141414 100%);
+      border-top: 3px solid var(--red);
+      border-bottom: 1px solid #252525;
+      padding: 16px 18px 14px;
     }
-    .project-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 3px;
-      background: linear-gradient(90deg, var(--red), #ff4444);
-      transform: scaleX(0);
-      transition: transform .35s ease;
-      transform-origin: left;
-      z-index: 2;
-    }
-    .project-card:hover::before { transform: scaleX(1); }
+    .card-title { font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 2.5px; color: #fff; line-height: 1.1; }
 
     .card-photo-wrap { overflow: hidden; position: relative; flex-shrink: 0; }
-    .card-photo-wrap::after {
-      content: '';
-      position: absolute; inset: 0;
-      background: linear-gradient(to bottom, transparent 30%, rgba(0,0,0,.75) 100%);
-      pointer-events: none;
-    }
-    .card-photo { width: 100%; display: block; background: #0a0a0a; object-fit: contain; transition: transform .5s ease; max-height: 260px; }
-    .project-card:hover .card-photo { transform: scale(1.05); }
-
+    .card-photo { width: 100%; display: block; background: #0a0a0a; object-fit: contain; max-height: 220px; transition: transform .4s; }
+    .project-card:hover .card-photo { transform: scale(1.03); }
     .card-no-photo { width: 100%; aspect-ratio: 16/9; background: #0d0d0d; display: flex; align-items: center; justify-content: center; }
     .card-no-photo svg { opacity: .1; }
 
-    /* Naam blokje boven de foto */
-    .card-header {
-      background: linear-gradient(135deg, #1a1a1a 0%, #141414 60%, #111 100%);
-      border-top: 3px solid var(--red);
-      border-bottom: 1px solid #252525;
-      padding: 20px 24px 18px;
-      position: relative;
-    }
-    .card-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 32px;
-      letter-spacing: 3px;
-      color: #fff;
-      line-height: 1.1;
-    }
+    .card-body { padding: 14px 18px 18px; display: flex; flex-direction: column; gap: 12px; flex: 1; }
 
-    .card-body { padding: 16px 20px 20px; display: flex; flex-direction: column; gap: 14px; flex: 1; }
-
-    /* ── DIENSTEN ── */
-    .diensten-section { display: flex; flex-direction: column; gap: 8px; }
-    .diensten-label {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 10px; font-weight: 700;
-      letter-spacing: 2px; text-transform: uppercase;
-      color: #555;
-      display: flex; align-items: center; gap: 8px;
-    }
+    /* diensten op kaart */
+    .diensten-label { font-family: 'Barlow Condensed', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #555; display: flex; align-items: center; gap: 8px; }
     .diensten-label::after { content: ''; flex: 1; height: 1px; background: #222; }
     .diensten-list { display: flex; flex-wrap: wrap; gap: 5px; }
-    .dienst-tag {
+    .dienst-tag { font-family: 'Barlow Condensed', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: .8px; text-transform: uppercase; color: #ccc; background: #161616; border: 1px solid #2a2a2a; border-left: 3px solid var(--red); padding: 3px 8px; }
+
+    /* vermogen op kaart */
+    .power-block { background: #0d0d0d; border: 1px solid #2a2a2a; border-top: 2px solid #222; overflow: hidden; margin-top: auto; }
+    .power-block-title { font-family: 'Barlow Condensed', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #444; padding: 6px 12px; border-bottom: 1px solid #1e1e1e; background: #0a0a0a; display: flex; align-items: center; gap: 8px; }
+    .power-block-title::before { content: ''; width: 8px; height: 2px; background: var(--red); flex-shrink: 0; }
+    .power-row { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 12px; gap: 6px; }
+    .power-col { display: flex; flex-direction: column; gap: 2px; }
+    .power-col.right { align-items: flex-end; }
+    .power-col-label { font-family: 'Barlow Condensed', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #444; }
+    .power-col.right .power-col-label { color: rgba(232,25,27,.6); }
+    .power-main { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 1px; line-height: 1; color: #bbb; }
+    .power-col.right .power-main { color: var(--red); }
+    .power-sub { font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 600; color: #444; }
+    .power-col.right .power-sub { color: rgba(232,25,27,.5); }
+    .power-arrow { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+    .power-arrow-line { width: 30px; height: 2px; background: linear-gradient(90deg, #333, var(--red)); position: relative; }
+    .power-arrow-line::after { content: ''; position: absolute; right: -1px; top: -4px; border-left: 7px solid var(--red); border-top: 5px solid transparent; border-bottom: 5px solid transparent; }
+    .power-gain { font-family: 'Bebas Neue', sans-serif; font-size: 11px; letter-spacing: 1px; color: var(--red); background: rgba(232,25,27,.1); border: 1px solid rgba(232,25,27,.2); padding: 1px 5px; white-space: nowrap; }
+
+    .card-desc { font-size: 12px; line-height: 1.6; color: #555; border-top: 1px solid #1e1e1e; padding-top: 10px; }
+
+    /* ── DETAIL VIEW ── */
+    .detail-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
       font-family: 'Barlow Condensed', sans-serif;
-      font-size: 11px; font-weight: 600;
-      letter-spacing: .8px; text-transform: uppercase;
-      color: #ccc;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
       background: #161616;
       border: 1px solid #2a2a2a;
-      border-left: 3px solid var(--red);
-      padding: 4px 10px;
-      transition: background .2s, color .2s;
+      padding: 10px 16px;
+      cursor: pointer;
+      margin-bottom: 20px;
+      transition: color .2s, border-color .2s;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
     }
-    .project-card:hover .dienst-tag { background: #1a1a1a; color: var(--white); }
+    .detail-back:hover { color: var(--white); border-color: var(--red); }
+    .detail-back::before { content: '←'; font-size: 16px; }
 
-    /* ── VERMOGEN BLOK ── */
-    .power-block {
-      background: #0d0d0d;
+    .detail-card {
+      background: #0f0f0f;
       border: 1px solid #2a2a2a;
-      border-top: 2px solid #222;
       overflow: hidden;
-      margin-top: auto;
-    }
-    .power-block-title {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 10px; font-weight: 700;
-      letter-spacing: 2px; text-transform: uppercase;
-      color: #444;
-      padding: 7px 14px;
-      border-bottom: 1px solid #1e1e1e;
-      background: #0a0a0a;
-      display: flex; align-items: center; gap: 8px;
-    }
-    .power-block-title::before {
-      content: '';
-      width: 10px; height: 2px;
-      background: var(--red);
-      flex-shrink: 0;
-    }
-    .power-row {
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      align-items: center;
-      padding: 14px 16px;
-      gap: 8px;
-      background: linear-gradient(135deg, rgba(232,25,27,.04) 0%, transparent 60%);
-    }
-    .power-col { display: flex; flex-direction: column; gap: 3px; }
-    .power-col.right { align-items: flex-end; }
-    .power-col-label {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 9px; font-weight: 700;
-      letter-spacing: 2px; text-transform: uppercase;
-      color: #444;
-    }
-    .power-col.right .power-col-label { color: rgba(232,25,27,.6); }
-    .power-main {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 30px; letter-spacing: 1px; line-height: 1;
-      color: #ccc;
-    }
-    .power-col.right .power-main { color: var(--red); }
-    .power-sub {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 12px; font-weight: 600;
-      color: #444;
-    }
-    .power-col.right .power-sub { color: rgba(232,25,27,.5); }
-    .power-arrow { display: flex; flex-direction: column; align-items: center; gap: 5px; }
-    .power-arrow-line {
-      width: 36px; height: 2px;
-      background: linear-gradient(90deg, #2a2a2a, var(--red));
-      position: relative;
-    }
-    .power-arrow-line::after {
-      content: '';
-      position: absolute; right: -1px; top: -4px;
-      border-left: 8px solid var(--red);
-      border-top: 5px solid transparent;
-      border-bottom: 5px solid transparent;
-    }
-    .power-gain {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 12px; letter-spacing: 1px;
-      color: var(--red);
-      background: rgba(232,25,27,.12);
-      border: 1px solid rgba(232,25,27,.25);
-      padding: 2px 6px;
-      white-space: nowrap;
+      animation: cardIn .3s ease;
     }
 
-    /* ── OMSCHRIJVING ── */
-    .card-desc {
-      font-size: 12px; line-height: 1.65;
-      color: #555;
-      border-top: 1px solid #1e1e1e;
-      padding-top: 12px;
+    .detail-header {
+      background: linear-gradient(135deg, #1c1c1c 0%, #141414 100%);
+      border-top: 3px solid var(--red);
+      border-bottom: 1px solid #252525;
+      padding: 24px 28px 20px;
     }
+    .detail-title { font-family: 'Bebas Neue', sans-serif; font-size: 38px; letter-spacing: 3px; color: #fff; line-height: 1.1; }
 
-    /* ── LIGHTBOX ── */
-    .lightbox { display: none; position: absolute; top: 0; left: 0; width: 100%; min-height: 100%; background: rgba(0,0,0,.97); z-index: 1000; padding: 32px 20px 60px; }
-    .lightbox.open { display: block; }
-    .lightbox-inner { background: #0f0f0f; border: 1px solid #2a2a2a; max-width: 820px; width: 100%; margin: 0 auto; position: relative; animation: lightIn .3s ease; display: flex; flex-direction: column; }
-    @keyframes lightIn { from { opacity: 0; transform: scale(.96) translateY(12px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+    .detail-photo { width: 100%; display: block; max-height: 480px; object-fit: contain; background: #080808; border-bottom: 1px solid #1a1a1a; }
 
-    /* Lightbox header */
-    .lb-header { background: linear-gradient(135deg, #1a1a1a 0%, #141414 60%, #111 100%); border-top: 3px solid var(--red); border-bottom: 1px solid #252525; padding: 24px 28px 20px; position: relative; }
-    .lb-close { position: absolute; top: 14px; right: 14px; background: rgba(232,25,27,.15); color: var(--red); border: 1px solid rgba(232,25,27,.3); width: 40px; height: 40px; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .2s; touch-action: manipulation; -webkit-tap-highlight-color: transparent; z-index: 10; }
-    .lb-close:hover, .lb-close:active { background: var(--red); color: #fff; }
-    .lb-title { font-family: 'Bebas Neue', sans-serif; font-size: 40px; letter-spacing: 3px; color: var(--white); line-height: 1; padding-right: 50px; }
+    .detail-content { display: flex; flex-direction: column; }
+    .detail-section { padding: 22px 28px; border-bottom: 1px solid #1a1a1a; }
+    .detail-section:last-child { border-bottom: none; }
+    .detail-section-label { font-family: 'Barlow Condensed', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--red); margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
+    .detail-section-label::after { content: ''; flex: 1; height: 1px; background: #1e1e1e; }
 
-    /* Foto */
-    .lb-photo { width: 100%; display: block; max-height: 460px; object-fit: contain; background: #080808; border-bottom: 1px solid #1a1a1a; }
+    /* detail diensten */
+    .detail-diensten { display: flex; flex-wrap: wrap; gap: 8px; }
+    .detail-dienst { font-family: 'Barlow Condensed', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: #ddd; background: #161616; border: 1px solid #2a2a2a; border-left: 3px solid var(--red); padding: 8px 14px; }
 
-    /* Content secties */
-    .lb-content { display: flex; flex-direction: column; gap: 0; }
-    .lb-section { padding: 20px 28px; border-bottom: 1px solid #1a1a1a; }
-    .lb-section:last-child { border-bottom: none; }
-    .lb-section-label { font-family: 'Barlow Condensed', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--red); margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
-    .lb-section-label::after { content: ''; flex: 1; height: 1px; background: #1e1e1e; }
+    /* detail vermogen */
+    .detail-power-wrap { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 16px; }
+    .detail-power-col { display: flex; flex-direction: column; gap: 6px; }
+    .detail-power-col.right { align-items: flex-end; }
+    .detail-power-label { font-family: 'Barlow Condensed', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #444; }
+    .detail-power-col.right .detail-power-label { color: rgba(232,25,27,.6); }
+    .detail-pk { font-family: 'Bebas Neue', sans-serif; font-size: 56px; letter-spacing: 2px; line-height: 1; color: #bbb; }
+    .detail-power-col.right .detail-pk { color: var(--red); }
+    .detail-nm { font-family: 'Barlow Condensed', sans-serif; font-size: 18px; font-weight: 600; color: #444; }
+    .detail-power-col.right .detail-nm { color: rgba(232,25,27,.5); }
+    .detail-arrow-wrap { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .detail-arrow-line { width: 48px; height: 2px; background: linear-gradient(90deg, #333, var(--red)); position: relative; }
+    .detail-arrow-line::after { content: ''; position: absolute; right: -1px; top: -5px; border-left: 10px solid var(--red); border-top: 6px solid transparent; border-bottom: 6px solid transparent; }
+    .detail-gain { font-family: 'Bebas Neue', sans-serif; font-size: 15px; letter-spacing: 1px; color: var(--red); background: rgba(232,25,27,.1); border: 1px solid rgba(232,25,27,.25); padding: 3px 10px; white-space: nowrap; text-align: center; }
 
-    /* Diensten in lightbox */
-    .lb-diensten { display: flex; flex-wrap: wrap; gap: 8px; }
-    .lb-dienst { font-family: 'Barlow Condensed', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: #ddd; background: #161616; border: 1px solid #2a2a2a; border-left: 3px solid var(--red); padding: 8px 14px; }
-
-    /* Vermogen in lightbox */
-    .lb-power-wrap { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 16px; }
-    .lb-power-col { display: flex; flex-direction: column; gap: 6px; }
-    .lb-power-col.right { align-items: flex-end; }
-    .lb-power-label { font-family: 'Barlow Condensed', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #444; }
-    .lb-power-col.right .lb-power-label { color: rgba(232,25,27,.6); }
-    .lb-pk { font-family: 'Bebas Neue', sans-serif; font-size: 52px; letter-spacing: 2px; line-height: 1; color: #bbb; }
-    .lb-power-col.right .lb-pk { color: var(--red); }
-    .lb-nm { font-family: 'Barlow Condensed', sans-serif; font-size: 18px; font-weight: 600; color: #444; }
-    .lb-power-col.right .lb-nm { color: rgba(232,25,27,.5); }
-    .lb-arrow-wrap { display: flex; flex-direction: column; align-items: center; gap: 8px; }
-    .lb-arrow-line { width: 48px; height: 2px; background: linear-gradient(90deg, #333, var(--red)); position: relative; }
-    .lb-arrow-line::after { content: ''; position: absolute; right: -1px; top: -5px; border-left: 10px solid var(--red); border-top: 6px solid transparent; border-bottom: 6px solid transparent; }
-    .lb-gain-badge { font-family: 'Bebas Neue', sans-serif; font-size: 15px; letter-spacing: 1px; color: var(--red); background: rgba(232,25,27,.12); border: 1px solid rgba(232,25,27,.3); padding: 3px 10px; white-space: nowrap; text-align: center; }
-
-    /* Omschrijving in lightbox */
-    .lb-desc { font-size: 14px; line-height: 1.8; color: #888; }
-
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: var(--dark); }
-    ::-webkit-scrollbar-thumb { background: var(--red); }
+    .detail-desc { font-size: 14px; line-height: 1.8; color: #777; }
 
     /* ── MOBIEL ── */
-    @media (max-width: 640px) {
-      .container { padding: 12px 12px 32px; }
-      .projects-grid { grid-template-columns: 1fr; gap: 16px; }
+    @media (max-width: 600px) {
+      .container { padding: 12px 10px 32px; }
+      .projects-grid { grid-template-columns: 1fr; gap: 12px; }
+      .card-title { font-size: 20px; }
+      .card-header { padding: 12px 14px 10px; }
+      .card-body { padding: 10px 14px 14px; }
+      .card-photo { max-height: 180px; }
+      .power-main { font-size: 20px; }
+      .power-arrow-line { width: 20px; }
 
-      /* Kaart */
-      .card-header { padding: 14px 16px 12px; }
-      .card-title { font-size: 22px; letter-spacing: 2px; }
-      .card-body { padding: 12px 16px 16px; gap: 12px; }
-      .card-photo { max-height: 200px; }
-
-      /* Diensten op kaart */
-      .dienst-tag { font-size: 10px; padding: 3px 8px; }
-
-      /* Vermogen op kaart */
-      .power-main { font-size: 22px; }
-      .power-arrow-line { width: 24px; }
-      .power-gain { font-size: 11px; }
-      .power-row { padding: 10px 12px; gap: 6px; }
-
-      /* Lightbox overlay */
-      .lightbox { padding: 0; }
-      .lightbox-inner { max-width: 100%; border-left: none; border-right: none; border-radius: 0; }
-
-      /* Lightbox header */
-      .lb-header { padding: 16px 16px 14px; }
-      .lb-title { font-size: 26px; letter-spacing: 2px; padding-right: 44px; }
-      .lb-close { top: 12px; right: 12px; width: 32px; height: 32px; font-size: 14px; }
-
-      /* Lightbox foto */
-      .lb-photo { max-height: 260px; }
-
-      /* Lightbox secties */
-      .lb-section { padding: 16px; }
-      .lb-section-label { font-size: 9px; }
-
-      /* Lightbox diensten */
-      .lb-dienst { font-size: 11px; padding: 6px 10px; }
-
-      /* Lightbox vermogen */
-      .lb-power-wrap { gap: 8px; }
-      .lb-pk { font-size: 36px; }
-      .lb-pk span { font-size: 18px !important; }
-      .lb-nm { font-size: 14px; }
-      .lb-arrow-line { width: 32px; }
-      .lb-gain-badge { font-size: 12px; padding: 2px 7px; }
-
-      /* Lightbox omschrijving */
-      .lb-desc { font-size: 13px; line-height: 1.7; }
+      .detail-header { padding: 16px 16px 14px; }
+      .detail-title { font-size: 26px; letter-spacing: 2px; }
+      .detail-photo { max-height: 260px; }
+      .detail-section { padding: 16px; }
+      .detail-pk { font-size: 38px; }
+      .detail-pk span { font-size: 18px !important; }
+      .detail-nm { font-size: 14px; }
+      .detail-arrow-line { width: 28px; }
+      .detail-gain { font-size: 12px; }
+      .detail-power-wrap { gap: 8px; }
+      .detail-dienst { font-size: 11px; padding: 6px 10px; }
+      .detail-desc { font-size: 13px; }
+      .detail-back { font-size: 11px; padding: 9px 14px; }
     }
 
-    @media (max-width: 380px) {
-      .card-title { font-size: 18px; }
-      .lb-pk { font-size: 28px; }
-      .lb-arrow-line { width: 20px; }
-    }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--red); }
   </style>
 </head>
 <body>
 
-<div style="position:relative;min-height:100vh">
-<div class="container">
-  <div class="loading" id="loading"><div class="spinner"></div><p>Projecten laden...</p></div>
-  <div class="empty-state" id="emptyState">
-    <div class="icon">🚗</div>
-    <h3>Nog geen projecten</h3>
-    <p>Kom binnenkort terug voor onze laatste projecten.</p>
+<!-- GRID VIEW -->
+<div id="view-grid">
+  <div class="container">
+    <div class="loading" id="loading"><div class="spinner"></div><p>Projecten laden...</p></div>
+    <div class="empty-state" id="emptyState">
+      <div class="icon">🚗</div>
+      <h3>Nog geen projecten</h3>
+    </div>
+    <div class="projects-grid" id="projectsGrid"></div>
   </div>
-  <div class="projects-grid" id="projectsGrid"></div>
 </div>
 
-<div class="lightbox" id="lightbox">
-  <div class="lightbox-inner" id="lightboxInner">
-    <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+<!-- DETAIL VIEW -->
+<div id="view-detail">
+  <div class="container">
+    <button class="detail-back" id="detailBack">Terug naar overzicht</button>
+    <div class="detail-card" id="detailCard"></div>
   </div>
-</div>
 </div>
 
 <script type="module">
   import { initializeApp }             from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
   import { getDatabase, ref, onValue } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
 
-  const firebaseConfig = {
+const firebaseConfig = {
   apiKey: "AIzaSyAWKsTh5rZWMk_8LWIYDBMlTavNa02m7yQ",
   authDomain: "hspcms-ffcd0.firebaseapp.com",
   databaseURL: "https://hspcms-ffcd0-default-rtdb.europe-west1.firebasedatabase.app",
@@ -357,91 +230,126 @@
   appId: "1:1073058165129:web:35bd6a5e7fdef49ef4f158"
 };
 
-  // Bereken vermogenswinst
-  function calcGain(before, after) {
-    if (!before || !after) return null;
-    const diff = parseInt(after) - parseInt(before);
-    if (isNaN(diff) || diff <= 0) return null;
-    return '+' + diff;
+  function calcGain(a, b) {
+    const d = parseInt(b) - parseInt(a);
+    return (!a || !b || isNaN(d) || d <= 0) ? null : '+' + d;
   }
 
-  // Vermogensblok voor de kaart
-  function makePowerBlock(p) {
+  function makePowerCard(p) {
     if (!p.stage1 || (!p.stdPk && !p.hspPk)) return '';
     const pkGain = calcGain(p.stdPk, p.hspPk);
     const nmGain = calcGain(p.stdNm, p.hspNm);
-    return `
-      <div class="power-block">
-        <div class="power-block-title">Vermogen & Koppel</div>
-        <div class="power-row">
-          <div class="power-col">
-            <div class="power-col-label">Standaard</div>
-            <div class="power-main">${p.stdPk || '–'} <span style="font-size:16px;opacity:.6">PK</span></div>
-            ${p.stdNm ? `<div class="power-sub">${p.stdNm} NM</div>` : ''}
-          </div>
-          <div class="power-arrow">
-            <div class="power-arrow-line"></div>
-            ${pkGain ? `<div class="power-gain">${pkGain} PK</div>` : ''}
-            ${nmGain ? `<div class="power-gain" style="margin-top:2px">${nmGain} NM</div>` : ''}
-          </div>
-          <div class="power-col right">
-            <div class="power-col-label">HS Performance</div>
-            <div class="power-main">${p.hspPk || '–'} <span style="font-size:16px;opacity:.7">PK</span></div>
-            ${p.hspNm ? `<div class="power-sub">${p.hspNm} NM</div>` : ''}
-          </div>
+    return `<div class="power-block">
+      <div class="power-block-title">Vermogen & Koppel</div>
+      <div class="power-row">
+        <div class="power-col">
+          <div class="power-col-label">Standaard</div>
+          <div class="power-main">${p.stdPk||'–'} <span style="font-size:13px;opacity:.5">PK</span></div>
+          ${p.stdNm ? `<div class="power-sub">${p.stdNm} NM</div>` : ''}
         </div>
-      </div>`;
+        <div class="power-arrow">
+          <div class="power-arrow-line"></div>
+          ${pkGain ? `<div class="power-gain">${pkGain} PK</div>` : ''}
+          ${nmGain ? `<div class="power-gain">${nmGain} NM</div>` : ''}
+        </div>
+        <div class="power-col right">
+          <div class="power-col-label">HS Performance</div>
+          <div class="power-main">${p.hspPk||'–'} <span style="font-size:13px;opacity:.6">PK</span></div>
+          ${p.hspNm ? `<div class="power-sub">${p.hspNm} NM</div>` : ''}
+        </div>
+      </div>
+    </div>`;
   }
 
-  // Vermogensblok voor de lightbox (groter)
-  function makeLbPowerBlock(p) {
-    if (!p.stage1 || (!p.stdPk && !p.hspPk)) return '';
-    const pkGain = calcGain(p.stdPk, p.hspPk);
-    const nmGain = calcGain(p.stdNm, p.hspNm);
-    return `
-      <div class="lb-power-block">
-        <div class="lb-power-title">Vermogen & Koppel</div>
-        <div class="lb-power-row">
-          <div class="lb-power-col">
-            <div class="lb-power-label">Standaard</div>
-            <div class="lb-power-main">${p.stdPk || '–'} <span style="font-size:22px;opacity:.6">PK</span></div>
-            ${p.stdNm ? `<div class="lb-power-sub">${p.stdNm} NM</div>` : ''}
-          </div>
-          <div class="lb-arrow">
-            <div class="lb-arrow-line"></div>
-            ${pkGain ? `<div class="lb-gain">${pkGain} PK</div>` : ''}
-            ${nmGain ? `<div class="lb-gain" style="margin-top:4px">${nmGain} NM</div>` : ''}
-          </div>
-          <div class="lb-power-col right">
-            <div class="lb-power-label">HS Performance</div>
-            <div class="lb-power-main">${p.hspPk || '–'} <span style="font-size:22px;opacity:.7">PK</span></div>
-            ${p.hspNm ? `<div class="lb-power-sub">${p.hspNm} NM</div>` : ''}
-          </div>
-        </div>
-      </div>`;
-  }
-
-  // Diensten blokken
-  function makeDiensten(p, forLightbox = false) {
+  function makeDienstenCard(p) {
     if (!p.diensten?.length) return '';
-    const tags = p.diensten.map(d => `<span class="dienst-tag">${d}</span>`).join('');
-    return `
-      <div class="diensten-section">
-        <div class="diensten-label">Uitgevoerde werkzaamheden</div>
-        <div class="diensten-list">${tags}</div>
-      </div>`;
+    return `<div>
+      <div class="diensten-label">Uitgevoerde werkzaamheden</div>
+      <div class="diensten-list">${p.diensten.map(d=>`<span class="dienst-tag">${d}</span>`).join('')}</div>
+    </div>`;
   }
+
+  function makePowerDetail(p) {
+    if (!p.stage1 || (!p.stdPk && !p.hspPk)) return '';
+    const pkGain = calcGain(p.stdPk, p.hspPk);
+    const nmGain = calcGain(p.stdNm, p.hspNm);
+    return `<div class="detail-section">
+      <div class="detail-section-label">Vermogen & Koppel</div>
+      <div class="detail-power-wrap">
+        <div class="detail-power-col">
+          <div class="detail-power-label">Standaard</div>
+          <div class="detail-pk">${p.stdPk||'–'} <span style="font-size:26px;opacity:.4">PK</span></div>
+          ${p.stdNm ? `<div class="detail-nm">${p.stdNm} NM</div>` : ''}
+        </div>
+        <div class="detail-arrow-wrap">
+          <div class="detail-arrow-line"></div>
+          ${pkGain ? `<div class="detail-gain">${pkGain} PK</div>` : ''}
+          ${nmGain ? `<div class="detail-gain">${nmGain} NM</div>` : ''}
+        </div>
+        <div class="detail-power-col right">
+          <div class="detail-power-label">HS Performance</div>
+          <div class="detail-pk">${p.hspPk||'–'} <span style="font-size:26px;opacity:.5">PK</span></div>
+          ${p.hspNm ? `<div class="detail-nm">${p.hspNm} NM</div>` : ''}
+        </div>
+      </div>
+    </div>`;
+  }
+
+  // Vertel de iframe-ouder hoe hoog de pagina is zodat er geen scrollbalk in het iframe komt
+  function notifyHeight() {
+    const h = document.body.scrollHeight;
+    window.parent.postMessage({ type: 'hsp-resize', height: h }, '*');
+  }
+
+  function showGrid() {
+    document.getElementById('view-grid').style.display = 'block';
+    document.getElementById('view-detail').style.display = 'none';
+    window.scrollTo(0, 0);
+    setTimeout(notifyHeight, 100);
+  }
+
+  function showDetail(p) {
+    const dienstenHtml = p.diensten?.length ? `
+      <div class="detail-section">
+        <div class="detail-section-label">Uitgevoerde werkzaamheden</div>
+        <div class="detail-diensten">${p.diensten.map(d=>`<div class="detail-dienst">${d}</div>`).join('')}</div>
+      </div>` : '';
+
+    const descHtml = p.omschrijving ? `
+      <div class="detail-section">
+        <div class="detail-section-label">Toelichting</div>
+        <div class="detail-desc">${p.omschrijving}</div>
+      </div>` : '';
+
+    document.getElementById('detailCard').innerHTML = `
+      <div class="detail-header">
+        <div class="detail-title">${p.titel || 'Project'}</div>
+      </div>
+      ${p.photo ? `<img class="detail-photo" src="${p.photo}" alt="${p.titel||''}" onerror="this.style.display='none'" />` : ''}
+      <div class="detail-content">
+        ${dienstenHtml}
+        ${makePowerDetail(p)}
+        ${descHtml}
+      </div>`;
+
+    document.getElementById('view-grid').style.display = 'none';
+    document.getElementById('view-detail').style.display = 'block';
+    window.scrollTo(0, 0);
+    setTimeout(notifyHeight, 100);
+  }
+
+  document.getElementById('detailBack').addEventListener('click', showGrid);
 
   try {
     const app = initializeApp(firebaseConfig);
     const db  = getDatabase(app);
     onValue(ref(db, 'projects'), snap => {
       const raw = snap.val() || {};
-      const projects = Object.values(raw).sort((a, b) => (b.ts || 0) - (a.ts || 0));
+      const projects = Object.values(raw).sort((a,b) => (b.ts||0)-(a.ts||0));
       render(projects);
     });
   } catch {
-    document.getElementById('loading').innerHTML = '<p style="color:#888;font-size:13px">Kon geen verbinding maken. Controleer de Firebase config.</p>';
+    document.getElementById('loading').innerHTML = '<p style="color:#666;font-size:13px">Kon geen verbinding maken.</p>';
   }
 
   function render(projects) {
@@ -450,18 +358,14 @@
     document.getElementById('loading').style.display = 'none';
     grid.innerHTML = '';
 
-    if (!projects.length) { empty.classList.add('visible'); return; }
+    if (!projects.length) { empty.classList.add('visible'); notifyHeight(); return; }
     empty.classList.remove('visible');
 
     projects.forEach((p, i) => {
       const card = document.createElement('div');
       card.className = 'project-card';
-      card.style.animationDelay = `${i * 0.06}s`;
-      card.onclick = () => openLightbox(p);
-
-      const photoHtml = p.photo
-        ? `<div class="card-photo-wrap"><img class="card-photo" src="${p.photo}" alt="${p.titel || ''}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=card-no-photo><svg width=64 height=64 viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'white\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg></div>'" /></div>`
-        : `<div class="card-no-photo"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></div>`;
+      card.style.animationDelay = `${i * 0.05}s`;
+      card.onclick = () => showDetail(p);
 
       card.innerHTML = `
         <div class="card-header">
@@ -469,89 +373,24 @@
         </div>
         <div class="card-photo-wrap">
           ${p.photo
-            ? `<img class="card-photo" src="${p.photo}" alt="${p.titel || ''}" loading="lazy" onerror="this.style.background='#0a0a0a';this.src=''" />`
-            : `<div class="card-no-photo"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></div>`
+            ? `<img class="card-photo" src="${p.photo}" alt="${p.titel||''}" loading="lazy" onerror="this.style.background='#0a0a0a';this.src=''" />`
+            : `<div class="card-no-photo"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></div>`
           }
         </div>
         <div class="card-body">
-          ${makeDiensten(p)}
-          ${makePowerBlock(p)}
+          ${makeDienstenCard(p)}
+          ${makePowerCard(p)}
           ${p.omschrijving ? `<div class="card-desc">${p.omschrijving}</div>` : ''}
         </div>`;
 
       grid.appendChild(card);
     });
+
+    setTimeout(notifyHeight, 200);
   }
 
-  window.openLightbox = p => {
-    const inner = document.getElementById('lightboxInner');
-
-    // Diensten sectie
-    const dienstenHtml = p.diensten?.length ? `
-      <div class="lb-section">
-        <div class="lb-section-label">Uitgevoerde werkzaamheden</div>
-        <div class="lb-diensten">
-          ${p.diensten.map(d => `<div class="lb-dienst">${d}</div>`).join('')}
-        </div>
-      </div>` : '';
-
-    // Vermogen sectie
-    let vermogenHtml = '';
-    if (p.stage1 && (p.stdPk || p.hspPk)) {
-      const pkGain = calcGain(p.stdPk, p.hspPk);
-      const nmGain = calcGain(p.stdNm, p.hspNm);
-      vermogenHtml = `
-        <div class="lb-section">
-          <div class="lb-section-label">Vermogen & Koppel</div>
-          <div class="lb-power-wrap">
-            <div class="lb-power-col">
-              <div class="lb-power-label">Standaard</div>
-              <div class="lb-pk">${p.stdPk || '–'} <span style="font-size:24px;opacity:.5">PK</span></div>
-              ${p.stdNm ? `<div class="lb-nm">${p.stdNm} NM</div>` : ''}
-            </div>
-            <div class="lb-arrow-wrap">
-              <div class="lb-arrow-line"></div>
-              ${pkGain ? `<div class="lb-gain-badge">${pkGain} PK</div>` : ''}
-              ${nmGain ? `<div class="lb-gain-badge">${nmGain} NM</div>` : ''}
-            </div>
-            <div class="lb-power-col right">
-              <div class="lb-power-label">HS Performance</div>
-              <div class="lb-pk">${p.hspPk || '–'} <span style="font-size:24px;opacity:.6">PK</span></div>
-              ${p.hspNm ? `<div class="lb-nm">${p.hspNm} NM</div>` : ''}
-            </div>
-          </div>
-        </div>`;
-    }
-
-    // Omschrijving sectie
-    const descHtml = p.omschrijving ? `
-      <div class="lb-section">
-        <div class="lb-section-label">Toelichting</div>
-        <div class="lb-desc">${p.omschrijving}</div>
-      </div>` : '';
-
-    inner.innerHTML = `
-      <div class="lb-header">
-        <button class="lb-close" onclick="closeLightbox()" aria-label="Sluiten">✕</button>
-        <div class="lb-title">${p.titel || 'Project'}</div>
-      </div>
-      ${p.photo ? `<img class="lb-photo" src="${p.photo}" alt="${p.titel || ''}" onerror="this.style.display='none'" />` : ''}
-      <div class="lb-content">
-        ${dienstenHtml}
-        ${vermogenHtml}
-        ${descHtml}
-      </div>`;
-
-    document.getElementById('lightbox').classList.add('open');
-    window.scrollTo(0, 0);
-  };
-
-  window.closeLightbox = () => {
-    document.getElementById('lightbox').classList.remove('open');
-  };
-
-  document.getElementById('lightbox').addEventListener('click', e => { if (e.target === e.currentTarget) window.closeLightbox(); });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') window.closeLightbox(); });
+  // Luister naar resize events om ouder bij te houden
+  new ResizeObserver(notifyHeight).observe(document.body);
 </script>
 </body>
 </html>
