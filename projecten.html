@@ -197,6 +197,8 @@
 </head>
 <body>
 
+<div id="top"></div>
+
 <!-- GRID VIEW -->
 <div id="view-grid">
   <div class="container">
@@ -209,8 +211,8 @@
   </div>
 </div>
 
-<!-- DETAIL VIEW -->
-<div id="view-detail">
+<!-- DETAIL VIEW (niet meer gebruikt - navigeert naar detail.html) -->
+<div id="view-detail" style="display:none">
   <div class="container">
     <button class="detail-back" id="detailBack">Terug naar overzicht</button>
     <div class="detail-card" id="detailCard"></div>
@@ -306,37 +308,15 @@ const firebaseConfig = {
     document.getElementById('view-grid').style.display = 'block';
     document.getElementById('view-detail').style.display = 'none';
     window.scrollTo(0, 0);
+    document.getElementById('top').scrollIntoView();
+    window.parent.postMessage({ type: 'hsp-scroll-top' }, '*');
     setTimeout(notifyHeight, 100);
   }
 
   function showDetail(p) {
-    const dienstenHtml = p.diensten?.length ? `
-      <div class="detail-section">
-        <div class="detail-section-label">Uitgevoerde werkzaamheden</div>
-        <div class="detail-diensten">${p.diensten.map(d=>`<div class="detail-dienst">${d}</div>`).join('')}</div>
-      </div>` : '';
-
-    const descHtml = p.omschrijving ? `
-      <div class="detail-section">
-        <div class="detail-section-label">Toelichting</div>
-        <div class="detail-desc">${p.omschrijving}</div>
-      </div>` : '';
-
-    document.getElementById('detailCard').innerHTML = `
-      <div class="detail-header">
-        <div class="detail-title">${p.titel || 'Project'}</div>
-      </div>
-      ${p.photo ? `<img class="detail-photo" src="${p.photo}" alt="${p.titel||''}" onerror="this.style.display='none'" />` : ''}
-      <div class="detail-content">
-        ${dienstenHtml}
-        ${makePowerDetail(p)}
-        ${descHtml}
-      </div>`;
-
-    document.getElementById('view-grid').style.display = 'none';
-    document.getElementById('view-detail').style.display = 'block';
-    window.scrollTo(0, 0);
-    setTimeout(notifyHeight, 100);
+    // Sla project op in sessionStorage, navigeer naar detail.html
+    try { sessionStorage.setItem('hsp_detail', JSON.stringify(p)); } catch(e) {}
+    window.location.href = 'detail.html';
   }
 
   document.getElementById('detailBack').addEventListener('click', showGrid);
