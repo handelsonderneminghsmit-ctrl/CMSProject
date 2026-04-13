@@ -42,17 +42,13 @@
       border: 1px solid #2a2a2a;
       border-bottom: 3px solid #1a1a1a;
       overflow: hidden;
-      cursor: pointer;
       animation: cardIn .4s ease both;
       display: flex;
       flex-direction: column;
       box-shadow: 0 4px 20px rgba(0,0,0,.5);
       transition: transform .25s, border-color .25s, box-shadow .25s;
-      touch-action: manipulation;
-      -webkit-tap-highlight-color: transparent;
     }
     @keyframes cardIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
-    .project-card:hover { transform: translateY(-4px); border-color: var(--red); box-shadow: 0 16px 40px rgba(232,25,27,.2); }
 
     .card-header {
       background: linear-gradient(135deg, #1c1c1c 0%, #141414 100%);
@@ -63,8 +59,7 @@
     .card-title { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 2.5px; color: #fff; line-height: 1.1; }
 
     .card-photo-wrap { overflow: hidden; position: relative; flex-shrink: 0; }
-    .card-photo { width: 100%; display: block; background: #0a0a0a; object-fit: contain; max-height: 280px; transition: transform .4s; }
-    .project-card:hover .card-photo { transform: scale(1.03); }
+    .card-photo { width: 100%; display: block; background: #0a0a0a; object-fit: contain; max-height: 280px; }
     .card-no-photo { width: 100%; aspect-ratio: 16/9; background: #0d0d0d; display: flex; align-items: center; justify-content: center; }
     .card-no-photo svg { opacity: .1; }
 
@@ -113,8 +108,6 @@
       cursor: pointer;
       margin-bottom: 20px;
       transition: color .2s, border-color .2s;
-      touch-action: manipulation;
-      -webkit-tap-highlight-color: transparent;
     }
     .detail-back:hover { color: var(--white); border-color: var(--red); }
     .detail-back::before { content: '←'; font-size: 16px; }
@@ -223,15 +216,15 @@
   import { initializeApp }             from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
   import { getDatabase, ref, onValue } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAWKsTh5rZWMk_8LWIYDBMlTavNa02m7yQ",
-  authDomain: "hspcms-ffcd0.firebaseapp.com",
-  databaseURL: "https://hspcms-ffcd0-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "hspcms-ffcd0",
-  storageBucket: "hspcms-ffcd0.firebasestorage.app",
-  messagingSenderId: "1073058165129",
-  appId: "1:1073058165129:web:35bd6a5e7fdef49ef4f158"
-};
+  const FIREBASE_CONFIG = {
+    apiKey:            "JOUW_API_KEY",
+    authDomain:        "hspcms-ffcd0.firebaseapp.com",
+    databaseURL:       "https://hspcms-ffcd0-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId:         "hspcms-ffcd0",
+    storageBucket:     "hspcms-ffcd0.firebasestorage.app",
+    messagingSenderId: "1073058165129",
+    appId:             "1:1073058165129:web:35bd6a5e7fdef49ef4f158"
+  };
 
   function calcGain(a, b) {
     const d = parseInt(b) - parseInt(a);
@@ -304,25 +297,10 @@ const firebaseConfig = {
     window.parent.postMessage({ type: 'hsp-resize', height: h }, '*');
   }
 
-  function showGrid() {
-    document.getElementById('view-grid').style.display = 'block';
-    document.getElementById('view-detail').style.display = 'none';
-    window.scrollTo(0, 0);
-    document.getElementById('top').scrollIntoView();
-    window.parent.postMessage({ type: 'hsp-scroll-top' }, '*');
-    setTimeout(notifyHeight, 100);
-  }
 
-  function showDetail(p) {
-    // Sla project op in sessionStorage, navigeer naar detail.html
-    try { sessionStorage.setItem('hsp_detail', JSON.stringify(p)); } catch(e) {}
-    window.location.href = 'detail.html';
-  }
-
-  document.getElementById('detailBack').addEventListener('click', showGrid);
 
   try {
-    const app = initializeApp(firebaseConfig);
+    const app = initializeApp(FIREBASE_CONFIG);
     const db  = getDatabase(app);
     onValue(ref(db, 'projects'), snap => {
       const raw = snap.val() || {};
@@ -346,7 +324,6 @@ const firebaseConfig = {
       const card = document.createElement('div');
       card.className = 'project-card';
       card.style.animationDelay = `${i * 0.05}s`;
-      card.onclick = () => showDetail(p);
 
       card.innerHTML = `
         <div class="card-header">
